@@ -56,6 +56,30 @@ export const constantRoutes = [
   },
 
   {
+    path: '/settings',
+    component: Layout,
+    redirect: '/settings/index',
+    children: [{
+      path: 'index',
+      name: 'settings',
+      component: () => import('@/views/settings/index'),
+      meta: { title: '设置', icon: 'settings' }
+    }]
+  },
+
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/index',
+    children: [{
+      path: 'index',
+      name: 'admin',
+      component: () => import('@/views/admin/index'),
+      meta: { title: '控制面板', icon: 'admin' }
+    }]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',

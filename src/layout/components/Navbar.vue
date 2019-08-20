@@ -16,6 +16,19 @@
               Home
             </el-dropdown-item>
           </router-link>
+          <el-dropdown-item>
+            {{ name }}
+          </el-dropdown-item>
+          <router-link to="/settings">
+            <el-dropdown-item>
+              设置
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/admin">
+            <el-dropdown-item>
+              控制面板
+            </el-dropdown-item>
+          </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
@@ -44,7 +57,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
   },
   methods: {
