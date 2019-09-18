@@ -3,49 +3,71 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">自动化系统</h3>
       </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
+      <div class="form-container">
+        <h5 v-show="status === 1">登陆</h5>
+        <h5 v-show="status === 2">找回密码</h5>
+        <el-form-item prop="username">
+          <!-- <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span> -->
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="用户名称"
+            name="username"
+            type="text"
+            tabindex="1"
+          />
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="Password"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
+        <el-form-item v-show="status === 1" prop="password">
+          <!-- <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span> -->
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="密码"
+            name="password"
+            tabindex="2"
+            @keyup.enter.native="handleLogin"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+        <el-form-item v-show="status === 2" prop="usermail">
+          <!-- <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span> -->
+          <el-input
+            ref="usermail"
+            v-model="loginForm.usermail"
+            placeholder="用户名称"
+            name="usermail"
+            type="text"
+            tabindex="1"
+          />
+        </el-form-item>
 
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleBtn">
+          {{ btnText }}
+        </el-button>
+
+        <div v-if="status === 1 || status === 2" class="toggleStatus" @click="toggleStatus">
+          {{ status === 1 ? '忘记密码' : '返回登陆' }}
+        </div>
+
+        <!-- <div class="tips">
+          <span style="margin-right:20px;">username: admin</span>
+          <span> password: any</span>
+        </div> -->
       </div>
 
     </el-form>
@@ -53,37 +75,39 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validUsername, validMail } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
+      status: 1, // 1: 登陆 2: 找回密码 3: 发送邮件成功
       loginForm: {
         username: 'admin',
-        password: '111111'
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: '111111',
+        usermail: ''
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined
+    }
+  },
+  computed: {
+    btnText() {
+      if (this.status === 1) {
+        return '登陆'
+      }
+      if (this.status === 2) {
+        return '发送邮件'
+      }
+      return '确定'
+    },
+    loginRules() {
+      return {
+        username: [{ required: true, trigger: 'blur', validator: this.validateUsername }],
+        password: [{ required: this.status === 1, trigger: 'blur', validator: this.validatePassword }],
+        usermail: [{ required: this.status === 2, trigger: 'blur', validator: this.validateMail }]
+      }
     }
   },
   watch: {
@@ -95,6 +119,27 @@ export default {
     }
   },
   methods: {
+    validateUsername(rule, value, callback) {
+      if (!validUsername(value)) {
+        callback(new Error('请输入正确的用户名'))
+      } else {
+        callback()
+      }
+    },
+    validatePassword(rule, value, callback) {
+      if (value.length < 6) {
+        callback(new Error('The password can not be less than 6 digits'))
+      } else {
+        callback()
+      }
+    },
+    validateMail(rule, value, callback) {
+      if (!validMail) {
+        callback(new Error('请输入正确的邮箱'))
+      } else {
+        callback()
+      }
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -104,6 +149,14 @@ export default {
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
+    },
+    toggleStatus() {
+      this.status = this.status === 1 ? 2 : 1
+    },
+    handleBtn() {
+      if (this.status === 1) {
+        return this.handleLogin()
+      }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -131,13 +184,13 @@ export default {
 
 $bg:#283443;
 $light_gray:#fff;
-$cursor: #fff;
+// $cursor: #fff;
 
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
+// @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+//   .login-container .el-input input {
+//     color: $cursor;
+//   }
+// }
 
 /* reset element-ui css */
 .login-container {
@@ -152,44 +205,42 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      // color: $light_gray;
       height: 47px;
-      caret-color: $cursor;
+      // caret-color: $cursor;
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        // -webkit-text-fill-color: $cursor !important;
       }
     }
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 2px;
     color: #454545;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#fff;
 $dark_gray:#889aa4;
-$light_gray:#eee;
+$light_gray:#3a78ea;
 
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
-  overflow: hidden;
 
   .login-form {
     position: relative;
-    width: 520px;
+    width: 390px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding-top: 130px;
     margin: 0 auto;
-    overflow: hidden;
   }
 
   .tips {
@@ -218,9 +269,41 @@ $light_gray:#eee;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0px auto 35px auto;
       text-align: center;
       font-weight: bold;
+    }
+  }
+
+  .form-container {
+    width: 390px;
+    padding: 38px 30px 60px;
+    box-shadow: 4px 4px 20px 0 rgba(0, 0, 0, .1);
+    h5 {
+      padding: 0;
+      margin: 0;
+      margin-bottom: 35px;
+      font-size: 24px;
+      color: #737373;
+    }
+    .el-form-item {
+      margin-bottom: 26px;
+    }
+    .el-input {
+      input {
+        color: #ddd;
+      }
+    }
+    .el-button {
+      margin-bottom: 15px!important;
+      padding: 15px 0;
+      font-size: 16px;
+      border-radius: 2px;
+    }
+    .toggleStatus {
+      color: $light_gray;
+      font-size: 14px;
+      cursor: pointer;
     }
   }
 
