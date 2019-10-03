@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import OrderLayout from '@/layout/order'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -44,15 +45,36 @@ export const constantRoutes = [
   },
 
   {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
+    path: '/order',
+    redirect: '/order/list',
+    name: 'Order',
+    component: OrderLayout,
+    hidden: true,
+    meta: {
+      title: '工单'
+    },
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      path: 'list',
+      name: 'OrderList',
+      component: () => import('@/views/order-list/index'),
+      meta: {
+        title: '工单概览'
+      }
     }]
+  },
+
+  {
+    path: '/',
+    // redirect: '/dashboard',
+    component: () => import('@/views/dashboard/index'),
+    hidden: true
+    // component: Layout,
+    // children: [{
+    //   path: 'dashboard',
+    //   name: 'Dashboard',
+    //   component: () => import('@/views/dashboard/index'),
+    //   meta: { title: 'Dashboard', icon: 'dashboard' }
+    // }]
   },
 
   {
@@ -197,6 +219,7 @@ const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
+  console.log(111)
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }

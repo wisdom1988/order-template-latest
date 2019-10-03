@@ -1,0 +1,167 @@
+<template>
+  <div class="order-wrap">
+    <div class="order">
+      <el-form ref="form" :model="form" inline label-width="80px">
+        <el-form-item label="客户名">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="工单日期">
+          <el-col :span="11">
+            <el-date-picker type="date" placeholder="开始日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-date-picker placeholder="结束日期" v-model="form.date2" style="width: 100%;"></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="工单号">
+          <el-input v-model="form.id"></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-select v-model="form.row" placeholder="请选择排序条件">
+            <el-option label="创建时间" :value="1">工单号</el-option>
+            <el-option label="工单号" :value="2">创建时间</el-option>
+            <el-option label="客户名" :value="3">客户名</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" icon="el-icon-search" @click="onSubmit">搜索</el-button>
+          <el-button type="text" size="small">清空筛选条件</el-button>
+        </el-form-item>
+      </el-form>
+      <div class="order-table">
+        <el-table
+          ref="multipleTable"
+          :data="orderList"
+          style="width: 100%"
+          border
+          @selection-change="handleSelectionChange">
+          <el-table-column
+            type="selection"
+            width="45">
+          </el-table-column>
+          <el-table-column
+            label="工单号"
+            width="120">
+            <template slot-scope="scope">{{ scope.row.id }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="客户名"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="createdTime"
+            label="创建时间"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="100px">
+            <template slot-scope="scope">
+              <el-button @click="preview(scope.row)" type="text" size="small" style="color:#F56C6C;">预览</el-button>
+              <el-button @click="deleteOne(scope.row)" type="text" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          :total="orderList.length"
+          class="order-pagination">
+        </el-pagination>
+      </div>
+    </div>
+    <div class="order-preview">
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      form: {
+        name: '',
+        date1: '',
+        date2: '',
+        id: '',
+        row: 1
+      },
+      orderList: [],
+      currentPage: 1,
+      pageSize: 10
+    }
+  },
+
+  created() {
+    this.orderList = [{
+      id: 123,
+      name: 'halo',
+      createdTime: 1570112816401
+    }]
+  },
+
+  methods: {
+    onSubmit() {},
+    handleSelectionChange(val) {},
+    preview(data) {},
+    deleteOne(data) {}
+  }
+}
+</script>
+
+<style lang="scss">
+.el-form-item {
+  margin-bottom: 15px;
+}
+.el-form-item__label,
+.el-form-item__content,
+.el-input__icon {
+  line-height: 36px;
+}
+.el-input__inner {
+  height: 36px;
+  width: 190px;
+}
+.el-table {
+  th {
+    padding: 6px;
+    font-weight: 500;
+  }
+  td {
+    padding: 0 6px;
+  }
+}
+.order {
+  width: 550px;
+  &-wrap {
+    padding-top: 20px;
+    display: flex;
+    min-width: 1080px;
+    overflow: auto;
+  }
+  &-table {
+    margin-top: 15px;
+    margin-left: 10px;
+    // padding-left: 10px;
+  }
+  &-preview {
+    flex: 1
+  }
+  label {
+    font-weight: 500
+  }
+  .line {
+    padding-left: 10px;
+    text-align: center
+  }
+  &-pagination {
+    margin-top: 10px;
+    float: right;
+  }
+}
+</style>
