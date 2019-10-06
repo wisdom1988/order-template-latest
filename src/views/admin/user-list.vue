@@ -1,0 +1,138 @@
+<template>
+  <div class="user">
+    <el-button type="primary" class="user-new" @click="updateStatus(2)">新建用户</el-button>
+    <el-table
+      :data="userList"
+      border=""
+      style="width: 100%">
+      <el-table-column
+        label="用户名">
+				<template slot-scope="scope">
+					<div class="user-edit" @click="editUser(scope.row)">
+						{{ scope.row.name }}
+					</div>
+				</template>
+      </el-table-column>
+      <el-table-column
+        prop="userId"
+        label="用户id">
+      </el-table-column>
+      <el-table-column
+        label="用户权限"
+				width="120px">
+				<template slot-scope="scope">
+					<div>
+						{{scope.row.type ? '管理员' : '普通用户' }}
+					</div>
+				</template>
+      </el-table-column>
+			<el-table-column
+        prop="allowCapacity"
+        label="存储空间(GB)"
+				width="120px">
+      </el-table-column>
+      <el-table-column
+        prop="email"
+        label="邮箱"
+				min-width="200px">
+      </el-table-column>
+      <el-table-column
+        label="可用"
+				width="80px">
+        <template slot-scope="scope">
+          <el-checkbox v-model="scope.row.isEnabled" disabled></el-checkbox>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="user-pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        :current-page.sync="currentPage"
+        :page-size="10"
+        layout="total, prev, pager, next"
+        :total="total">
+      </el-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapMutations } from 'vuex'
+import { getUserList } from '@/api/manage'
+
+export default {
+	name: 'UserList',
+
+  data() {
+    return {
+      userList: [],
+      total: null,
+      currentPage: 1,
+    }
+	},
+
+	created() {
+		this.getList(this.currentPage)
+	},
+
+  methods: {
+		...mapMutations({
+			updateStatus: 'admin/UPDATE_STATUS',
+			updateUserInfo: 'admin/UPDATE_USERINFO'
+		}),
+		getList(currentPage) {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			getUserList({
+				currentPage,
+				pageSize: 10,
+				userId: 1
+			}).then((data) => {
+				data.list.forEach((item) => {
+					item.isEnabled = Boolean(item.isEnabled)
+				})
+				this.total = data.total
+				this.userList = data.list
+				loading.close()
+			}, (err) => {
+				loading.close()
+				console.log(err)
+			})
+		},
+    changePage(val) {
+      console.log(val)
+		},
+		editUser(data) {
+			this.updateUserInfo(data)
+			this.updateStatus(3)
+		}
+  }
+}
+</script>
+
+<style lang='scss' scoped>
+/deep/ .el-table {
+  th, td {
+    padding: 6px 0;
+  }
+}
+
+.user {
+	&-new {
+		margin-bottom: 15px;
+	}
+	&-edit {
+		color: #409eff;
+		cursor: pointer;
+	}
+	&-pagination {
+		margin-top: 10px;
+  	float: right;
+	}
+}
+</style>

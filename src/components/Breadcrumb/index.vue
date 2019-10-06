@@ -13,6 +13,9 @@
 import pathToRegexp from 'path-to-regexp'
 
 export default {
+  prop: {
+    order: Boolean,
+  },
   data() {
     return {
       levelList: null
@@ -32,18 +35,21 @@ export default {
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
 
-      if (!this.isOrder(first)) {
-        matched = [{ path: '/order', meta: { title: '工单' }}].concat(matched)
+      if (!this.isMain(first)) {
+        const path = this.order ? '/order' : '/admin'
+        const title = this.order ? '工单' : '控制面板'
+        matched = [{ path, meta: { title }}].concat(matched)
       }
 
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
     },
-    isOrder(route) {
+    isMain(route) {
       const name = route && route.name
       if (!name) {
         return false
       }
-      return name.trim().toLocaleLowerCase() === 'Order'.toLocaleLowerCase()
+      const mainName = this.order ? 'Order' : 'Admin'
+      return name.trim().toLocaleLowerCase() === mainName.toLocaleLowerCase()
     },
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
@@ -66,7 +72,7 @@ export default {
 <style lang="scss" scoped>
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 40px;
   margin-left: 8px;
 

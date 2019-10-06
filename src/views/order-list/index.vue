@@ -19,13 +19,13 @@
         </el-form-item>
         <el-form-item label="排序">
           <el-select v-model="form.row" placeholder="请选择排序条件">
-            <el-option label="创建时间" :value="1">工单号</el-option>
-            <el-option label="工单号" :value="2">创建时间</el-option>
-            <el-option label="客户名" :value="3">客户名</el-option>
+            <el-option label="创建时间" :value="1"></el-option>
+            <el-option label="工单号" :value="2"></el-option>
+            <el-option label="客户名" :value="3"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="small" icon="el-icon-search" @click="onSubmit">搜索</el-button>
+          <el-button type="primary" size="small" icon="el-icon-search" class="order-search" @click="onSubmit">搜索</el-button>
           <el-button type="text" size="small">清空筛选条件</el-button>
         </el-form-item>
       </el-form>
@@ -64,6 +64,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-button type="text">批量删除</el-button>
         <el-pagination
           background
           layout="prev, pager, next"
@@ -75,13 +76,19 @@
       </div>
     </div>
     <div class="order-preview">
-
+      <preview></preview>
     </div>
   </div>
 </template>
 
 <script>
+import Preview from '@/components/preview'
+
 export default {
+  components: {
+    Preview
+  },
+
   data() {
     return {
       form: {
@@ -137,17 +144,22 @@ export default {
   }
 }
 .order {
+  padding: 20px 10px 20px 0;
   width: 550px;
+  background: #fff;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
   &-wrap {
-    padding-top: 20px;
     display: flex;
     min-width: 1080px;
+    min-height: 100%;
     overflow: auto;
+  }
+  &-search {
+    margin-left: 10px;
   }
   &-table {
     margin-top: 15px;
     margin-left: 10px;
-    // padding-left: 10px;
   }
   &-preview {
     flex: 1
@@ -162,6 +174,12 @@ export default {
   &-pagination {
     margin-top: 10px;
     float: right;
+  }
+  &-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
   }
 }
 </style>

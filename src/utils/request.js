@@ -1,7 +1,27 @@
 import axios from 'axios'
+import camelCase from 'lodash/camelCase'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+
+function camelize(obj) {
+  if (obj === null) {
+    return null
+  }
+  if (typeof obj === 'object' && !Array.isArray(obj)) {
+    const ret = {}
+    Object.keys(obj).forEach((attr) => {
+      Object.defineProperty(ret, camelCase(attr), {
+        value: camelize(obj[attr]),
+        writable: true,
+        enumerable: true,
+        configurable: true
+      })
+    })
+    return ret
+  }
+  return Array.isArray(obj) ? obj.map(o => camelize(o)) : obj
+}
 
 // create an axios instance
 const service = axios.create({
@@ -43,10 +63,10 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    const res = response.data
+    const res = camelize(response.data)
 
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    // if the custom code is not 0, it is judged as an error.
+    if (res.code !== 0) {
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -68,11 +88,10 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      return res.data
     }
   },
   error => {
-    console.log('err' + error) // for debug
     Message({
       message: error.message,
       type: 'error',

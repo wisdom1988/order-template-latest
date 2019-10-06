@@ -91,13 +91,53 @@ export const constantRoutes = [
 
   {
     path: '/admin',
+    name: 'Admin',
     component: Layout,
     redirect: '/admin/index',
+    meta: { title: '控制面板' },
     children: [{
       path: 'index',
       name: 'admin',
       component: () => import('@/views/admin/index'),
-      meta: { title: '控制面板', icon: 'admin' }
+      meta: { title: '用户管理', icon: 'admin' },
+      // children: [
+      //   {
+      //     path: 'user-list',
+      //     name: 'users',
+      //     component: () => import('@/views/admin/user-list'),
+      //     meta: { title: '用户管理' }
+      //   },
+      //   {
+      //     path: 'user-edit',
+      //     name: 'userEdit',
+      //     component: () => import('@/views/admin/user-edit'),
+      //     meta: { title: '用户编辑' }
+      //   }
+      // ]
+    }]
+  },
+
+  {
+    path: '/template',
+    component: Layout,
+    redirect: '/template/index',
+    children: [{
+      path: 'index',
+      name: 'template',
+      component: () => import('@/views/order-template/index'),
+      meta: { title: '工单模板', icon: 'template' }
+    }]
+  },
+
+  {
+    path: '/manage',
+    component: Layout,
+    redirect: '/manage/index',
+    children: [{
+      path: 'index',
+      name: 'manage',
+      component: () => import('@/views/web-manage/index'),
+      meta: { title: '网站管理', icon: 'manage' }
     }]
   },
 

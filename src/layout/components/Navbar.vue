@@ -2,7 +2,7 @@
   <div class="navbar">
     <hamburger v-if="!order" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb class="breadcrumb-container" />
+    <breadcrumb class="breadcrumb-container" :order="order"/>
 
   </div>
 </template>
@@ -45,10 +45,10 @@ export default {
 <style lang="scss" scoped>
 .navbar {
   height: 40px;
-  overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .7);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
+  z-index: 1;
 
   .hamburger-container {
     line-height: 40px;
