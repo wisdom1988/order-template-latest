@@ -7,3 +7,10 @@ export function getUserList(data) {
     data
   })
 }
+
+export function getTemplateList() {
+  return request({
+    url: '/template/list',
+    method: 'get'
+  })
+}
