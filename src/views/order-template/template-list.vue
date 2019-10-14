@@ -21,7 +21,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Dashboard',
+  name: 'TemplateList',
   props: {
     templateList: {
       type: Array,
