@@ -5,12 +5,13 @@
       <div
         v-for="item in templateList"
         :key="item.tempId"
-        class="list-content">
+        class="list-content"
+      >
         <div class="list-content-name" @click="$emit('edit', 3, item)">{{ item.title }}</div>
         <div class="list-content-icon">
           <img v-if="item.icon" :src="item.icon">
-          <i v-else class="el-icon-plus"></i>
-          <input type="file" @change="updateTemplateIcon($event.target.files, item)" title="">
+          <i v-else class="el-icon-plus" />
+          <input type="file" title="" @change="updateTemplateIcon($event.target.files, item)">
         </div>
       </div>
     </div>
