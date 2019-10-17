@@ -57,7 +57,11 @@
               :prop="'tableData.' + scope.$index + '.showType'"
               :rules="{ required: true, message: '请选择类型', trigger: 'change' }"
             >
-              <el-select v-model="scope.row.showType" placeholder="请选择">
+              <el-select
+                v-model="scope.row.showType"
+                placeholder="请选择"
+                @change="initOption(scope.row)"
+              >
                 <el-option label="文本框" :value="1" />
                 <el-option label="下拉框" :value="2" />
               </el-select>
@@ -145,14 +149,14 @@
         @click="addPulldownData"
       />
     </el-dialog>
-    <!-- <el-dialog :visible.sync="textTableVisible">
+    <el-dialog :visible.sync="textTableVisible">
       <div class="dialog-head">
         <strong>字段名</strong>
         <el-button type="primary" size="mini" @click="saveTextData">保存</el-button>
         <el-button type="primary" size="mini" @click="textTableVisible = false">取消</el-button>
       </div>
-      <el-input v-model.trim="textData" />
-    </el-dialog> -->
+      <el-input v-model.trim="textData" placeholder="请输入内容" class="dialog-text" />
+    </el-dialog>
   </div>
 </template>
 
@@ -161,6 +165,10 @@ export default {
   props: {
     blockData: {
       type: Array,
+      required: true
+    },
+    type: {
+      type: Number,
       required: true
     }
   },
@@ -176,7 +184,8 @@ export default {
         showType: null,
         row: null,
         col: null,
-        option: null
+        option: null,
+        type: this.type
       },
       pulldown: {
         rules: {
@@ -184,7 +193,6 @@ export default {
         },
         selection: [{ text: '', isDefault: false }]
       },
-      // pulldownData: [],
       textData: '',
       model: {
         tableData: this.blockData
@@ -228,6 +236,13 @@ export default {
       return this.pulldown.selection.some(({ text }, i) => {
         return i === index ? false : text === value
       })
+    },
+    initOption(item) {
+      if (item.showType === 1) {
+        item.option = ''
+      } else {
+        item.option = []
+      }
     },
     addParams() {
       this.blockData.push({ ...this.paramTemp })
@@ -282,6 +297,8 @@ export default {
     },
     saveTextData() {
       this.blockData[this.editingBlockIndex].option = this.textData
+      this.$message.success('保存成功')
+      this.textTableVisible = false
     },
     saveBlockData() {
       let res
@@ -289,14 +306,12 @@ export default {
         if (valid) {
           res = this.blockData.every((item) => {
             if (item.showType === 1) return true
-            console.log(item)
             if (!item.option || !item.option.length) {
               this.$message.error(`请点击选项按钮完善${item.name}字段下拉框数据`)
               return false
             }
             return true
           })
-          console.log(res)
         } else {
           res = false
         }
@@ -344,6 +359,11 @@ export default {
       padding-top: 11px;
       vertical-align: top;
     }
+  }
+  &-text {
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 200px;
   }
 }
 </style>

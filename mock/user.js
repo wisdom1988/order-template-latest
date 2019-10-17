@@ -9,28 +9,36 @@ const tokens = {
 }
 
 const users = {
-  'admin-token': {
-    roles: ['admin'],
-    introduction: 'I am a super administrator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Super Admin'
+  'admin': {
+    // roles: ['admin'],
+    // introduction: 'I am a super administrator',
+    // avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    // name: 'Super Admin'
+    user_id: 1,
+    access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjFcL2xvZ2luIiwiaWF0IjoxNTY3NTE1NTAxLCJleHAiOjE1Njc1MTkxMDEsIm5iZiI6MTU2NzUxNTUwMSwianRpIjoiNUMxOHVRWEJSRFBPWE1BViIsInN1YiI6MTAwMCwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WMPfRZLmvkdA0D4Ugg02LVj_G6lems5wrPneroF0P6Y',
+    expires_in: '1571371200',
+    user_type: 1
   },
-  'editor-token': {
-    roles: ['editor'],
-    introduction: 'I am an editor',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
+  'editor': {
+    user_id: 1,
+    access_token: 'byJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjFcL2xvZ2luIiwiaWF0IjoxNTY3NTE1NTAxLCJleHAiOjE1Njc1MTkxMDEsIm5iZiI6MTU2NzUxNTUwMSwianRpIjoiNUMxOHVRWEJSRFBPWE1BViIsInN1YiI6MTAwMCwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WMPfRZLmvkdA0D4Ugg02LVj_G6lems5wrPneroF0P6Y',
+    expires_in: '1571371200',
+    user_type: 0
+    // roles: ['editor'],
+    // introduction: 'I am an editor',
+    // avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    // name: 'Normal Editor'
   }
 }
 
 export default [
   // user login
   {
-    url: '/user/login',
+    url: '/login',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
+      const { name } = config.body
+      const token = tokens[name]
 
       // mock error
       if (!token) {

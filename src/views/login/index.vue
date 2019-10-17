@@ -9,15 +9,15 @@
       <div class="form-container">
         <h5 v-show="status === 1">登陆</h5>
         <h5 v-show="status === 2">找回密码</h5>
-        <el-form-item prop="username">
+        <el-form-item prop="name">
           <!-- <span class="svg-container">
             <svg-icon icon-class="user" />
           </span> -->
           <el-input
             ref="username"
-            v-model="loginForm.username"
+            v-model="loginForm.name"
             placeholder="用户名称"
-            name="username"
+            name="name"
             type="text"
             tabindex="1"
           />
@@ -83,8 +83,8 @@ export default {
     return {
       status: 1, // 1: 登陆 2: 找回密码 3: 发送邮件成功
       loginForm: {
-        username: 'admin',
-        password: '111111',
+        name: 'admin',
+        password: '653431',
         usermail: ''
       },
       loading: false,
@@ -104,7 +104,7 @@ export default {
     },
     loginRules() {
       return {
-        username: [{ required: true, trigger: 'blur', validator: this.validateUsername }],
+        name: [{ required: true, trigger: 'blur', validator: this.validateUsername }],
         password: [{ required: this.status === 1, trigger: 'blur', validator: this.validatePassword }],
         usermail: [{ required: this.status === 2, trigger: 'blur', validator: this.validateMail }]
       }

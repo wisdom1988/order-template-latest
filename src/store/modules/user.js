@@ -1,11 +1,12 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
   name: '',
-  avatar: ''
+  avatar: '',
+  userId: getUserId()
 }
 
 const mutations = {
@@ -17,18 +18,22 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_USERID: (state, userId) => {
+    state.userId = userId
   }
 }
 
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(data => {
+      login(userInfo).then(data => {
         console.log(data)
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_TOKEN', data.accessToken)
+        setToken(data.accessToken, data.expiresIn)
+        commit('SET_USERID', data.userId)
+        setUserId(data.userId)
         resolve()
       }).catch(error => {
         reject(error)
@@ -39,7 +44,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(data => {
+      getInfo(state.userId).then(data => {
         if (!data) {
           reject('Verification failed, please Login again.')
         }

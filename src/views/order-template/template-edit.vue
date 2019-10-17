@@ -3,35 +3,36 @@
     <div class="edit-type">{{ type === 2 ? '新建模板' : '编辑模板' }}</div>
     <div class="edit-btn">
       <el-button type="primary" size="mini" @click="saveTemplate">保存</el-button>
-      <el-button type="primary" size="mini">取消</el-button>
-      <el-button v-if="type === 3" type="primary" size="mini">删除</el-button>
+      <el-button type="primary" size="mini" @click="$emit('edit', 1)">取消</el-button>
+      <el-button v-if="type === 3" type="primary" size="mini" @click="deleteTemplate">删除</el-button>
     </div>
-    <el-form :model="formData" ref="title" label-width="100px" inline class="edit-title">
+    <el-form ref="title" :model="formData" label-width="100px" inline class="edit-title">
       <el-form-item
         label="模板名称"
         prop="title"
-        :rules="{ required: true, message: '模板名称不能为空'}"
+        :rules="{ required: true, message: '模板名称不能为空' }"
       >
-        <el-input v-model.trim="formData.title"></el-input>
+        <el-input v-model.trim="formData.title" />
       </el-form-item>
     </el-form>
     <div class="edit">
       <div class="edit-block">工单参数</div>
-      <template-block ref="orderBlock" :block-data="orderData" />
+      <template-block ref="orderBlock" :block-data="orderData" :type="1" />
     </div>
     <div class="edit">
       <div class="edit-block">生产参数</div>
-      <template-block ref="proBlock" :block-data="productData" />
+      <template-block ref="proBlock" :block-data="productData" :type="2" />
     </div>
     <div class="edit">
       <div class="edit-block">自动化</div>
-      <template-block ref="autoBlock" :block-data="automaticData" />
+      <template-block ref="autoBlock" :block-data="automaticData" :type="3" />
     </div>
   </div>
 </template>
 
 <script>
 import { deepCopy } from '@/utils'
+import { deleteTemplate } from '@/api/manage'
 import TemplateBlock from './template-block-new'
 
 export default {
@@ -63,7 +64,7 @@ export default {
           const params = deepCopy(val.params)
           this.formData = {
             ...val,
-            params,
+            params
           }
           this.splitParams(params)
           return
@@ -105,9 +106,33 @@ export default {
       this.$refs.title.validate((valid) => {
         if (valid && orderRes && proRes && autoRes) {
           this.formData.params = [...this.orderData, ...this.productData, ...this.automaticData]
+          // 保存模板请求
           console.log(this.formData)
         }
       })
+    },
+    deleteTemplate() {
+      this.$confirm('确定删除此字段吗?', '确认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        deleteTemplate(this.templateContent.tempId)
+          .then((data) => {
+            loading.close()
+            this.$message.success('删除成功')
+            this.$emit('edit', 1)
+          })
+          .catch(() => {
+            loading.close()
+          })
+      }).catch(() => {})
     }
   }
 }

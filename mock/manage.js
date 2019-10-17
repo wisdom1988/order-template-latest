@@ -19,10 +19,10 @@ const userData = Mock.mock({
 })
 
 const templateData = Mock.mock({
-  'list|4': [{
+  'list|15': [{
     temp_id: '@id',
     title: '@cname',
-    'icon|1': [Random.dataImage('100x100', 'Hello Mock.js!'), ''],
+    // 'icon|1': [Random.dataImage('100x100', 'Hello Mock.js!'), ''],
     'params|10': [{
       name: '@cname',
       'show_type|1': [1, 2],
@@ -53,12 +53,26 @@ export default [
   },
   {
     url: '/template/list',
-    type: 'get',
+    type: 'post',
     response: config => {
+      const { page, number } = config.body
       const list = templateData.list
       return {
         code: 0,
-        data: list
+        data: {
+          total: list.length,
+          list: list.slice((page - 1) * number, page * number)
+        }
+      }
+    }
+  },
+  {
+    url: '/orderTemplate/delete',
+    type: 'post',
+    response: config => {
+      return {
+        code: 0,
+        message: '成功'
       }
     }
   }

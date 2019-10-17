@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <template-list v-if="type === 1" :template-list="templateList" @edit="changeType" />
+    <template-list
+      v-if="type === 1"
+      :template-list="templateList"
+      :total="totol"
+      :page="page"
+      @edit="changeType"
+      @page="changePage"
+    />
     <template-edit v-if="type === 2 || type === 3" :type="type" :template-content="templateContent" @edit="changeType" />
   </div>
 </template>
@@ -18,6 +25,9 @@ export default {
   },
   data() {
     return {
+      number: 10,
+      totol: 0,
+      page: 1,
       type: 1, // 1 所有工单模板 2 工单模板新建 3 工单模板编辑
       templateList: [],
       templateContent: {}
@@ -41,13 +51,20 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      getTemplateList().then((data) => {
+      const { page, number } = this
+      getTemplateList({ page, number }).then((data) => {
         console.log(data)
-        this.templateList = data
+        this.totol = data.total
+        this.templateList = data.list
         loading.close()
-      }, (err) => {
+      }).catch(() => {
+        this.templateList = []
         loading.close()
       })
+    },
+    changePage(page) {
+      this.page = page
+      this.getList()
     },
     changeType(type, item) {
       this.type = type
