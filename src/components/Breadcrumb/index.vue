@@ -13,8 +13,11 @@
 import pathToRegexp from 'path-to-regexp'
 
 export default {
-  prop: {
-    order: Boolean,
+  props: {
+    order: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

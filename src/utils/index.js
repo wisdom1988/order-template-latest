@@ -126,3 +126,68 @@ export function deepCopy(obj) {
   }
   return result
 }
+
+export function getDefaultValue(item) {
+  if (item.showType === 1) {
+    return item.option
+  }
+  let value
+  item.option.some((v) => {
+    if (v.isDefault) {
+      value = v.text
+      return true
+    }
+  })
+  return value
+}
+
+/**
+ * @param {Array} arr
+ * @returns {Object}
+ */
+export function formatOrderDetail(arr) {
+  // 将工单分为1(工单参数),2(生产参数),3(自定义参数)三个部分
+  const detailData = {}
+  arr.forEach((item) => {
+    if (detailData[item.type]) {
+      detailData[item.type].push(item)
+    } else {
+      detailData[item.type] = [item]
+    }
+  })
+  const keys = Object.keys(detailData)
+  Object.values(detailData).forEach((option, i) => {
+    const arr = []
+    option.forEach((item) => {
+      const value = getDefaultValue(item)
+      item.value = item.value || value
+      item.length = item.nameLength
+      if (!arr[item.row - 1]) {
+        arr[item.row - 1] = [item]
+      } else {
+        arr[item.row - 1].push(item)
+      }
+      const copiedValueItem = { ...item, length: item.contentLength }
+      arr[item.row - 1].push(copiedValueItem)
+    })
+    detailData[keys[i]] = arr
+  })
+  return detailData
+}
+
+/**
+ * @description 多维数组转一维
+ * @param {Array} arr
+ * @returns {Array}
+ */
+export function flatArr(arr) {
+  let res = []
+  for (let i = 0; i < arr.length; i++) {
+    if (Array.isArray(arr[i])) {
+      res = res.concat(flatArr(arr[i]))
+    } else {
+      res.push(arr[i])
+    }
+  }
+  return res
+}

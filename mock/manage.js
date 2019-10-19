@@ -52,15 +52,16 @@ export default [
     }
   },
   {
-    url: '/template/list',
-    type: 'post',
+    url: '/orderTemplate/list',
+    type: 'get',
     response: config => {
-      const { page, number } = config.body
+      const { page, number } = config.query
       const list = templateData.list
       return {
         code: 0,
         data: {
           total: list.length,
+          pageTotal: 2,
           list: list.slice((page - 1) * number, page * number)
         }
       }

@@ -1,19 +1,19 @@
 <template>
-	<div class="preview-wrap">
-		<div class="preview">
-			<h5 class="preview-title">生产施工单</h5>
-		</div>
-		<div class="preview-btn">
-			<el-button type="primary" size="small" plain>文件</el-button>
-			<el-button type="primary" size="small" plain>编辑</el-button>
-			<el-button type="primary" size="small" plain>打印</el-button>
-		</div>
-	</div>
+  <div class="preview-wrap">
+    <div class="preview">
+      <h5 class="preview-title">生产施工单</h5>
+    </div>
+    <div class="preview-btn">
+      <el-button type="primary" size="small" plain>文件</el-button>
+      <el-button type="primary" size="small" plain>编辑</el-button>
+      <el-button type="primary" size="small" plain>打印</el-button>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    
+
 }
 </script>
 
@@ -37,7 +37,7 @@ h5 {
 		font-weight: 500;
 	}
 	&-wrap {
-		width: 500px;
+		width: 90%;
 	}
 	// span {
 	// 	display: inline-block;

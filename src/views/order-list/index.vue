@@ -24,9 +24,10 @@
             <el-option label="客户名" :value="3" />
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item class="order-handle">
           <el-button type="primary" size="small" icon="el-icon-search" class="order-search" @click="onSubmit">搜索</el-button>
           <el-button type="text" size="small">清空筛选条件</el-button>
+          <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/add')">新建工单</el-button>
         </el-form-item>
       </el-form>
       <div class="order-table">
@@ -39,18 +40,15 @@
         >
           <el-table-column
             type="selection"
-            width="45"
           />
           <el-table-column
             label="工单号"
-            width="120"
           >
             <template slot-scope="scope">{{ scope.row.id }}</template>
           </el-table-column>
           <el-table-column
             prop="name"
             label="客户名"
-            width="120"
           />
           <el-table-column
             prop="createdTime"
@@ -59,7 +57,6 @@
           />
           <el-table-column
             label="操作"
-            width="100px"
           >
             <template slot-scope="scope">
               <el-button type="text" size="small" style="color:#F56C6C;" @click="preview(scope.row)">预览</el-button>
@@ -119,7 +116,10 @@ export default {
     onSubmit() {},
     handleSelectionChange(val) {},
     preview(data) {},
-    deleteOne(data) {}
+    deleteOne(data) {},
+    jump() {
+      this.$router.replace({ path: '/order/add' })
+    }
   }
 }
 </script>
@@ -147,13 +147,24 @@ export default {
   }
 }
 .order {
-  padding: 20px 10px 20px 0;
-  width: 550px;
+  padding: 20px 10px 20px 10px;
+  width: 50%;
   background: #fff;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
+  &-handle {
+    width: 100%;
+    .el-form-item__content {
+      display: block;
+    }
+    &-add {
+      margin-top: 2px;
+      margin-right: 10px;
+      float: right;
+    }
+  }
   &-wrap {
     display: flex;
-    min-width: 1080px;
+    min-width: 1180px;
     min-height: 100%;
     overflow: auto;
   }

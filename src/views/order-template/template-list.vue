@@ -22,7 +22,7 @@
             :before-upload="uploadCheck"
             :http-request="uploadRequest"
           >
-            <img v-if="item.icon" :src="item.icon" class="avatar">
+            <img v-if="item.icon" :src="item.icon" class="avatar" @error="imgLoadError($event.target, item)">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </div>
@@ -42,6 +42,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import IconTemplate from './icon_template.png'
 
 export default {
   name: 'TemplateList',
@@ -75,6 +76,10 @@ export default {
     // updateTemplateIcon(file, item) {
     //   console.log(file, item)
     // },
+    imgLoadError(el, item) {
+      el.src = IconTemplate
+      item.icon = ''
+    },
     setItem(item) {
       this.uploadingItem = item
     },

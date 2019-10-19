@@ -60,6 +60,20 @@ export const constantRoutes = [
       meta: {
         title: '工单概览'
       }
+    }, {
+      path: 'add',
+      name: 'OrderAdd',
+      component: () => import('@/views/order-add/index'),
+      meta: {
+        title: '新建工单'
+      }
+    }, {
+      path: 'edit',
+      name: 'OrderEdit',
+      component: () => import('@/views/order-edit/index'),
+      meta: {
+        title: '编辑工单'
+      }
     }]
   },
 
@@ -99,7 +113,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'admin',
       component: () => import('@/views/admin/index'),
-      meta: { title: '用户管理', icon: 'admin' },
+      meta: { title: '用户管理', icon: 'admin' }
       // children: [
       //   {
       //     path: 'user-list',
@@ -259,7 +273,6 @@ const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  console.log(111)
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }

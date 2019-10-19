@@ -2,7 +2,7 @@
   <div class="navbar">
     <hamburger v-if="!order" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-    <breadcrumb class="breadcrumb-container" :order="order"/>
+    <breadcrumb class="breadcrumb-container" :order="order" />
 
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
   height: 40px;
   position: relative;
   background: #fff;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
+  box-shadow: 0 3px 6px 0 rgba(23, 63, 126, 0.07);
   z-index: 1;
 
   .hamburger-container {

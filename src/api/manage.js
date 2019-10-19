@@ -28,12 +28,12 @@ export function getTemplateList(params) {
 }
 
 // 删除工单模板
-export function deleteTemplate(id) {
+export function deleteTemplate(tempId) {
   return request({
     url: '/orderTemplate/delete',
     method: 'post',
     data: {
-      temp_id: id
+      tempId
     }
   })
 }
@@ -65,5 +65,15 @@ export function templateBindImg(temp_id, icon) {
       temp_id,
       icon
     }
+  })
+}
+
+// 创建工单
+
+export function addOrder(data) {
+  return request({
+    url: '/job/createJob',
+    method: 'post',
+    data
   })
 }

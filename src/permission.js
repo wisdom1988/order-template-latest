@@ -19,7 +19,6 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log('token', hasToken)
 
   if (hasToken) {
     if (to.path === '/login') {
@@ -28,15 +27,12 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-      console.log(hasGetUserInfo)
       if (hasGetUserInfo) {
         next()
       } else {
         try {
           // get user info
-          console.log('getUserInfo')
           await store.dispatch('user/getInfo')
-          console.log('user/getUserInfo')
 
           next()
         } catch (error) {

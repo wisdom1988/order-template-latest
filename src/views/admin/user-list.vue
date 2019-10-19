@@ -136,7 +136,7 @@ export default {
 	}
 	&-pagination {
 		margin-top: 10px;
-  	float: right;
+    float: right;
 	}
 }
 </style>

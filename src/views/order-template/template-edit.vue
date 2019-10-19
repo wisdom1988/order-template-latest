@@ -32,7 +32,7 @@
 
 <script>
 import { deepCopy } from '@/utils'
-import { deleteTemplate } from '@/api/manage'
+import { deleteTemplate, addTemplate, editTemplate } from '@/api/manage'
 import TemplateBlock from './template-block-new'
 
 export default {
@@ -51,7 +51,6 @@ export default {
   data() {
     return {
       formData: null,
-      // title: '',
       orderData: [],
       productData: [],
       automaticData: []
@@ -62,6 +61,11 @@ export default {
       handler(val) {
         if (val.tempId) {
           const params = deepCopy(val.params)
+          params.forEach((item) => {
+            if (item.type === 1 && (item.name === '客户' || item.name === '工单号')) {
+              item.isRequired = true
+            }
+          })
           this.formData = {
             ...val,
             params
@@ -81,7 +85,18 @@ export default {
           showType: null,
           row: null,
           col: null,
-          isCustom: true
+          isRequired: true,
+          type: 1
+        })
+        this.orderData.push({
+          name: '工单号',
+          nameLength: null,
+          contentLength: null,
+          showType: null,
+          row: null,
+          col: null,
+          isRequired: true,
+          type: 1
         })
       },
       immediate: true
@@ -107,12 +122,27 @@ export default {
         if (valid && orderRes && proRes && autoRes) {
           this.formData.params = [...this.orderData, ...this.productData, ...this.automaticData]
           // 保存模板请求
-          console.log(this.formData)
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          const reqName = this.type === 2 ? addTemplate : editTemplate
+          reqName(this.formData).then(() => {
+            loading.close()
+            this.$message.success('保存成功')
+            setTimeout(() => {
+              this.$emit('edit', 1)
+            }, 1000)
+          }).catch(() => {
+            loading.close()
+          })
         }
       })
     },
     deleteTemplate() {
-      this.$confirm('确定删除此字段吗?', '确认', {
+      this.$confirm('确定删除此模板吗?', '确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

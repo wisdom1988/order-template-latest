@@ -63,7 +63,6 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.log('success')
     const res = camelize(response.data)
 
     // if the custom code is not 0, it is judged as an error.
@@ -93,7 +92,6 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('error')
     Message({
       message: error.message,
       type: 'error',

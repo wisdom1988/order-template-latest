@@ -37,20 +37,24 @@ export default [
     url: '/login',
     type: 'post',
     response: config => {
-      const { name } = config.body
-      const token = tokens[name]
+      // const { name } = config.body
+      // const token = tokens[name]
 
       // mock error
-      if (!token) {
-        return {
-          code: 60204,
-          message: 'Account and password are incorrect.'
-        }
-      }
+      // if (!token) {
+      //   return {
+      //     code: 60204,
+      //     message: 'Account and password are incorrect.'
+      //   }
+      // }
 
       return {
         code: 0,
-        data: token
+        data: {
+          user_id: 1000,
+          access_token: 'bearea eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjFcL2xvZ2luIiwiaWF0IjoxNTY3NTE1NTAxLCJleHAiOjE1Njc1MTkxMDEsIm5iZiI6MTU2NzUxNTUwMSwianRpIjoiNUMxOHVRWEJSRFBPWE1BViIsInN1YiI6MTAwMCwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WMPfRZLmvkdA0D4Ugg02LVj_G6lems5wrPneroF0P6Y',
+          expires_in: '1567601901'
+        }
       }
     }
   },
@@ -58,22 +62,28 @@ export default [
   // get user info
   {
     url: '/user/info\.*',
-    type: 'get',
+    type: 'post',
     response: config => {
-      const { token } = config.query
-      const info = users[token]
+      // const { userId } = config.body
+      // const info = users[token]
 
       // mock error
-      if (!info) {
-        return {
-          code: 50008,
-          message: 'Login failed, unable to get user details.'
-        }
-      }
+      // if (!info) {
+      //   return {
+      //     code: 50008,
+      //     message: 'Login failed, unable to get user details.'
+      //   }
+      // }
 
       return {
         code: 0,
-        data: info
+        data: {
+          id: 7,
+          name: 'admin',
+          password: '123456',
+          type: 1,
+          is_enabled: 1
+        }
       }
     }
   },
