@@ -43,6 +43,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import IconTemplate from './icon_template.png'
+import { uploadImg, templateBindImg } from '@/api/manage'
 
 export default {
   name: 'TemplateList',
@@ -102,10 +103,25 @@ export default {
       return true
     },
     uploadRequest() {
-      setTimeout(() => {
-        // 临时添加，返回后要再调用上传对应模板的接口，成功后再赋值
-        this.uploadingItem.icon = this.localFilePreview
-      }, 0)
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      uploadImg(this.file).then((data) => {
+        const { tempId } = this.uploadingItem
+        return templateBindImg(tempId, data.url).then(() => {
+          this.uploadingItem.icon = this.localFilePreview
+          loading.close()
+        })
+      }).catch(() => {
+        loading.close()
+      })
+      // setTimeout(() => {
+      //   // 临时添加，返回后要再调用上传对应模板的接口，成功后再赋值
+      //   this.uploadingItem.icon = this.localFilePreview
+      // }, 0)
     },
     changePage(page) {
       this.$emit('page', page)

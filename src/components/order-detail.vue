@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { deepCopy, flatArr } from '@/utils'
 import { getUserId } from '@/utils/auth'
 import { addOrder } from '@/api/manage'
@@ -63,10 +64,10 @@ export default {
       type: Number, // 0 新建 1 编辑
       required: true
     },
-    templateData: {
-      type: Object,
-      default: () => {}
-    },
+    // templateData: {
+    //   type: Object,
+    //   default: () => {}
+    // },
     tempId: {
       type: Number,
       default: 0
@@ -75,64 +76,42 @@ export default {
 
   data() {
     return {
-      // originData: {},
       renderData: {}
     }
   },
 
   computed: {
+    ...mapState({
+      editData: ({ template }) => template.editData
+    }),
     originData() {
-      return deepCopy(this.templateData)
+      return deepCopy(this.editData)
     }
   },
 
   watch: {
-    templateData: {
+    editData: {
       handler(val) {
         this.renderData = deepCopy(val)
       },
       immediate: true
     }
-    // templateData: {
-    //   handler(val) {
-    //     this.renderData = deepCopy(val)
-    //     const keys = Object.keys(this.renderData)
-    //     Object.values(this.renderData).forEach((option, i) => {
-    //       const arr = []
-    //       option.forEach((item) => {
-    //         const value = this.getDefaultValue(item)
-    //         item.value = item.value || value
-    //         item.length = item.nameLength
-    //         if (!arr[item.row - 1]) {
-    //           arr[item.row - 1] = [item]
-    //         } else {
-    //           arr[item.row - 1].push(item)
-    //         }
-    //         const copiedValueItem = { ...item, length: item.contentLength }
-    //         arr[item.row - 1].push(copiedValueItem)
-    //       })
-    //       this.renderData[keys[i]] = arr
-    //     })
-    //     this.originData = deepCopy(this.renderData)
-    //   },
-    //   immediate: true
-    // }
   },
 
   methods: {
-    getDefaultValue(item) {
-      if (item.showType === 1) {
-        return item.option
-      }
-      let value
-      item.option.some((v) => {
-        if (v.isDefault) {
-          value = v.text
-          return true
-        }
-      })
-      return value
-    },
+    // getDefaultValue(item) {
+    //   if (item.showType === 1) {
+    //     return item.option
+    //   }
+    //   let value
+    //   item.option.some((v) => {
+    //     if (v.isDefault) {
+    //       value = v.text
+    //       return true
+    //     }
+    //   })
+    //   return value
+    // },
     resetData() {
       this.renderData = deepCopy(this.originData)
     },

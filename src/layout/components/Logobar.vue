@@ -64,7 +64,7 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #2e4156;
+  background: #2e4156 url('./logo.png') 24px center no-repeat;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .right-menu {

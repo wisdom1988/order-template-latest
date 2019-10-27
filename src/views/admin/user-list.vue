@@ -3,7 +3,7 @@
     <el-button type="primary" class="user-new" @click="updateStatus(2)">新建用户</el-button>
     <el-table
       :data="userList"
-      border=""
+      border
       style="width: 100%"
     >
       <el-table-column
@@ -16,7 +16,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="userId"
+        prop="id"
         label="用户id"
       />
       <el-table-column
@@ -52,7 +52,7 @@
       <el-pagination
         background
         :current-page.sync="currentPage"
-        :page-size="10"
+        :page-size="2"
         layout="total, prev, pager, next"
         :total="total"
         @current-change="changePage"
@@ -72,7 +72,8 @@ export default {
     return {
       userList: [],
       total: null,
-      currentPage: 1
+      currentPage: 1,
+      pageSize: 2
     }
   },
 
@@ -85,17 +86,17 @@ export default {
       updateStatus: 'admin/UPDATE_STATUS',
       updateUserInfo: 'admin/UPDATE_USERINFO'
     }),
-    getList(currentPage) {
+    getList() {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
+      const { currentPage: page, pageSize } = this
       getUserList({
-        currentPage,
-        pageSize: 10,
-        userId: 1
+        page,
+        pageSize
       }).then((data) => {
         data.list.forEach((item) => {
           item.isEnabled = Boolean(item.isEnabled)
@@ -103,13 +104,14 @@ export default {
         this.total = data.total
         this.userList = data.list
         loading.close()
-      }, (err) => {
+      }, () => {
+        this.userList = []
         loading.close()
-        console.log(err)
       })
     },
     changePage(val) {
-      console.log(val)
+      this.currentPage = val
+      this.getList()
     },
     editUser(data) {
       this.updateUserInfo(data)

@@ -2,10 +2,12 @@ import request from '@/utils/request'
 
 // 上传图片
 export function uploadImg(file) {
+  const param = new FormData()
+  param.append('file', file)
   return request({
     url: '/upload',
     method: 'post',
-    data: { file }
+    data: param
   })
 }
 
@@ -18,7 +20,16 @@ export function getUserList(data) {
   })
 }
 
-// 获取模板工单列表
+// 创建新用户
+export function addUser(data) {
+  return request({
+    url: '/user/register',
+    method: 'post',
+    data
+  })
+}
+
+// 获取工单模板列表
 export function getTemplateList(params) {
   return request({
     url: '/orderTemplate/list',
@@ -68,11 +79,28 @@ export function templateBindImg(temp_id, icon) {
   })
 }
 
-// 创建工单
+// 获取工单列表
+export function getOrderList(data) {
+  return request({
+    url: '/job/jobList',
+    method: 'post',
+    data
+  })
+}
 
+// 创建工单
 export function addOrder(data) {
   return request({
     url: '/job/createJob',
+    method: 'post',
+    data
+  })
+}
+
+// 删除工单
+export function deleteOrder(data) {
+  return request({
+    url: '/job/deleteJob',
     method: 'post',
     data
   })

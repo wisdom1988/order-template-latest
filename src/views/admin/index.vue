@@ -2,7 +2,7 @@
   <div class="app-container">
     <transition name="fade" mode="out-in">
       <keep-alive include="UserList">
-        <component :is="view"/>
+        <component :is="view" />
       </keep-alive>
     </transition>
   </div>

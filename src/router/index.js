@@ -55,25 +55,42 @@ export const constantRoutes = [
     },
     children: [{
       path: 'list',
+      redirect: '/order/list/main',
       name: 'OrderList',
-      component: () => import('@/views/order-list/index'),
+      component: () => import('@/components/order-wrap'),
       meta: {
         title: '工单概览'
-      }
-    }, {
-      path: 'add',
-      name: 'OrderAdd',
-      component: () => import('@/views/order-add/index'),
-      meta: {
-        title: '新建工单'
-      }
-    }, {
-      path: 'edit',
-      name: 'OrderEdit',
-      component: () => import('@/views/order-edit/index'),
-      meta: {
-        title: '编辑工单'
-      }
+      },
+      children: [
+        {
+          path: 'main',
+          component: () => import('@/views/order-list/index')
+        },
+        {
+          path: 'add',
+          name: 'OrderAdd',
+          component: () => import('@/views/order-add/index'),
+          meta: {
+            title: '新建工单'
+          }
+        },
+        {
+          path: 'edit',
+          name: 'OrderEdit',
+          component: () => import('@/views/order-edit/index'),
+          meta: {
+            title: '编辑工单'
+          }
+        },
+        {
+          path: 'upload',
+          name: 'OrderUpload',
+          component: () => import('@/views/preview-upload/index'),
+          meta: {
+            title: '上传文件'
+          }
+        }
+      ]
     }]
   },
 

@@ -20,8 +20,10 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { getTemplateList } from '@/api/manage'
 import { formatOrderDetail } from '@/utils'
+import { getUserId } from '@/utils/auth'
 import IconTemplate from './icon_template.png'
 
 export default {
@@ -33,7 +35,9 @@ export default {
   },
 
   data() {
+    const userId = getUserId()
     return {
+      userId,
       page: 1,
       number: 10,
       pageTotal: null,
@@ -58,6 +62,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      updateEditData: 'template/UPDATE_EDITDATA'
+    }),
     getTemplateList() {
       const loading = this.$loading({
         lock: true,
@@ -65,15 +72,16 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { page, number } = this
-      getTemplateList({ page, number }).then((data) => {
+      const { page, number, userId } = this
+      getTemplateList({ page, number, userId }).then((data) => {
         this.pageTotal = data.pageTotal
         data.list.forEach((item) => {
           item.params = formatOrderDetail(item.params)
         })
         this.templateList = data.list
         this.activeTempId = data.list[0].tempId
-        this.$emit('choose', data.list[0].params, data.list[0].tempId)
+        this.updateEditData(data.list[0].params)
+        this.$emit('choose', data.list[0].tempId)
         // this.templateData = data.list[0].params
         loading.close()
       }).catch(() => {
@@ -120,7 +128,7 @@ export default {
 
     chooseTemplate(item) {
       this.activeTempId = item.tempId
-      this.$emit('choose', item.params, item.tempId)
+      this.$emit('choose', item.tempId)
     }
   }
 }

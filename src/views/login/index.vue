@@ -3,6 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
+        <img src="./logo.png" alt="logo">
         <h3 class="title">自动化系统</h3>
       </div>
 
@@ -56,7 +57,7 @@
           />
         </el-form-item>
 
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleBtn">
+        <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleBtn">
           {{ btnText }}
         </el-button>
 
@@ -69,16 +70,22 @@
           <span> password: any</span>
         </div> -->
       </div>
-
     </el-form>
+    <code-verify :visible="showCodeVerify" @click="verifyLogin" />
   </div>
 </template>
 
 <script>
-import { validUsername, validMail } from '@/utils/validate'
+// import { validUsername, validMail } from '@/utils/validate'
+import CodeVerify from './code-verify'
+import { validMail } from '@/utils/validate'
+import { getLocal, setLocal, removeLocal } from '@/utils'
 
 export default {
   name: 'Login',
+  components: {
+    CodeVerify
+  },
   data() {
     return {
       status: 1, // 1: 登陆 2: 找回密码 3: 发送邮件成功
@@ -89,7 +96,9 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      showCodeVerify: false,
+      verifyCode: ''
     }
   },
   computed: {
@@ -104,7 +113,7 @@ export default {
     },
     loginRules() {
       return {
-        name: [{ required: true, trigger: 'blur', validator: this.validateUsername }],
+        name: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
         password: [{ required: this.status === 1, trigger: 'blur', validator: this.validatePassword }],
         usermail: [{ required: this.status === 2, trigger: 'blur', validator: this.validateMail }]
       }
@@ -119,13 +128,13 @@ export default {
     }
   },
   methods: {
-    validateUsername(rule, value, callback) {
-      if (!validUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    },
+    // validateUsername(rule, value, callback) {
+    //   if (!validUsername(value)) {
+    //     callback(new Error('请输入正确的用户名'))
+    //   } else {
+    //     callback()
+    //   }
+    // },
     validatePassword(rule, value, callback) {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
@@ -158,21 +167,51 @@ export default {
         return this.handleLogin()
       }
     },
+    checkCode() {
+      const errTimes = getLocal('loginErr')
+      if (errTimes < 3) {
+        return {}
+      }
+      // 已经输错三次以上且没有输入验证码
+      if (!this.verifyCode) {
+        this.showCodeVerify = true
+        // 获取验证码图片
+        return false
+      }
+      return {
+        code: this.verifyCode
+      }
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          const extraParams = this.checkCode()
+          if (!extraParams) return
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
+          this.$store.dispatch('user/login', Object.assign(this.loginForm, extraParams)).then(() => {
+            this.$router.push({ path: this.redirect || '/order' })
             this.loading = false
-          }).catch(() => {
+            this.verifyCode = ''
+            removeLocal('loginErr')
+          }).catch((err) => {
             this.loading = false
+            this.verifyCode = ''
+            if (err.code !== 1001) return
+            let errTimes = getLocal('loginErr')
+            if (errTimes) {
+              setLocal('loginErr', ++errTimes)
+            } else {
+              setLocal('loginErr', 1)
+            }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
+    },
+    verifyLogin(code) {
+      this.verifyCode = code
+      this.showCodeVerify = false
     }
   }
 }
@@ -194,6 +233,9 @@ $light_gray:#fff;
 
 /* reset element-ui css */
 .login-container {
+  height: 100vh;
+  background: #000 url('./bg.png') center center no-repeat;
+  background-size: contain;
   .el-input {
     display: inline-block;
     height: 47px;
@@ -226,21 +268,27 @@ $light_gray:#fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#fff;
+$bg:#000;
 $dark_gray:#889aa4;
 $light_gray:#3a78ea;
 
+.el-button--primary {
+  background: #3A78EA;
+}
+
 .login-container {
-  min-height: 100%;
-  width: 100%;
+  min-height: 100vh;
+  min-width: 1088px;
   background-color: $bg;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   .login-form {
     position: relative;
     width: 390px;
-    max-width: 100%;
-    padding-top: 130px;
-    margin: 0 auto;
+    // margin: 0 auto;
   }
 
   .tips {
@@ -265,11 +313,18 @@ $light_gray:#3a78ea;
 
   .title-container {
     position: relative;
+    text-align: center;
+    img {
+      margin-bottom: 18px;
+      width: 168px;
+      vertical-align: middle;
+    }
 
     .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 35px auto;
+      font-size: 28px;
+      line-height: 34px;
+      color: #fff;
+      margin: 0px auto 24px auto;
       text-align: center;
       font-weight: bold;
     }
@@ -279,6 +334,8 @@ $light_gray:#3a78ea;
     width: 390px;
     padding: 38px 30px 60px;
     box-shadow: 4px 4px 20px 0 rgba(0, 0, 0, .1);
+    border-radius: 5px;
+    background: #fff;
     h5 {
       padding: 0;
       margin: 0;
@@ -297,7 +354,7 @@ $light_gray:#3a78ea;
     .el-button {
       margin-bottom: 15px!important;
       padding: 15px 0;
-      font-size: 16px;
+      font-size: 18px;
       border-radius: 2px;
     }
     .toggleStatus {

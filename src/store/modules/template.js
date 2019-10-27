@@ -3,7 +3,9 @@ export default {
 
   state: {
     status: 1,
-    userInfo: {}
+    userInfo: {},
+    previewData: {},
+    editData: {}
   },
 
   mutations: {
@@ -13,6 +15,14 @@ export default {
 
     UPDATE_USERINFO: (state, userInfo) => {
       state.userInfo = userInfo
+    },
+
+    UPDATE_PREVIEWDATA: (state, previewData) => {
+      state.previewData = previewData
+    },
+
+    UPDATE_EDITDATA: (state, editData) => {
+      state.editData = editData
     }
   }
 }

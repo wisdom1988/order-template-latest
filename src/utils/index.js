@@ -110,6 +110,22 @@ export function param2Obj(url) {
 }
 
 /**
+ * @param {string} key
+ * @param {number} value
+ */
+export function setLocal(key, value) {
+  localStorage.setItem(key, value)
+}
+
+export function getLocal(key) {
+  return +localStorage.getItem(key)
+}
+
+export function removeLocal(key) {
+  localStorage.removeItem(key)
+}
+
+/**
  * @param {object} obj
  * @returns {Boolean}
  */
@@ -167,6 +183,7 @@ export function formatOrderDetail(arr) {
       } else {
         arr[item.row - 1].push(item)
       }
+      // 复制一份同字段内容方便布局
       const copiedValueItem = { ...item, length: item.contentLength }
       arr[item.row - 1].push(copiedValueItem)
     })

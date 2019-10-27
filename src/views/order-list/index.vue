@@ -3,31 +3,37 @@
     <div class="order">
       <el-form ref="form" :model="form" inline label-width="80px">
         <el-form-item label="客户名">
-          <el-input v-model="form.name" />
+          <el-input v-model="form.client" />
         </el-form-item>
         <el-form-item label="工单日期">
           <el-col :span="11">
-            <el-date-picker v-model="form.date1" type="date" placeholder="开始日期" style="width: 100%;" />
+            <el-date-picker v-model="form.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" style="width: 100%;" />
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
-            <el-date-picker v-model="form.date2" placeholder="结束日期" style="width: 100%;" />
+            <el-date-picker
+              v-model="form.endTime"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="结束日期"
+              style="width: 100%;"
+            />
           </el-col>
         </el-form-item>
         <el-form-item label="工单号">
-          <el-input v-model="form.id" />
+          <el-input v-model="form.jobName" />
         </el-form-item>
         <el-form-item label="排序">
-          <el-select v-model="form.row" placeholder="请选择排序条件">
+          <el-select v-model="form.sort" placeholder="请选择排序条件">
             <el-option label="创建时间" :value="1" />
-            <el-option label="工单号" :value="2" />
+            <el-option label="工单名" :value="2" />
             <el-option label="客户名" :value="3" />
           </el-select>
         </el-form-item>
         <el-form-item class="order-handle">
           <el-button type="primary" size="small" icon="el-icon-search" class="order-search" @click="onSubmit">搜索</el-button>
-          <el-button type="text" size="small">清空筛选条件</el-button>
-          <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/add')">新建工单</el-button>
+          <el-button type="text" size="small" @click="resetSearch">清空筛选条件</el-button>
+          <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/list/add')">新建工单</el-button>
         </el-form-item>
       </el-form>
       <div class="order-table">
@@ -35,25 +41,26 @@
           ref="multipleTable"
           :data="orderList"
           style="width: 100%"
-          border
           @selection-change="handleSelectionChange"
         >
           <el-table-column
             type="selection"
+            width="60px"
           />
           <el-table-column
             label="工单号"
           >
-            <template slot-scope="scope">{{ scope.row.id }}</template>
+            <template slot-scope="scope">{{ scope.row.jobName }}</template>
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="client"
             label="客户名"
           />
           <el-table-column
-            prop="createdTime"
+            prop="createTime"
             label="创建时间"
             show-overflow-tooltip
+            min-width="140px"
           />
           <el-table-column
             label="操作"
@@ -64,25 +71,30 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-button type="text">批量删除</el-button>
+        <el-button type="text" @click="deleteMult">批量删除</el-button>
         <el-pagination
           background
           layout="prev, pager, next"
           :current-page="currentPage"
           :page-size="pageSize"
-          :total="orderList.length"
+          :total="totalPage"
           class="order-pagination"
         />
       </div>
     </div>
     <div class="order-preview">
-      <preview />
+      <div class="order-preview-wrap">
+        <preview />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import Preview from '@/components/preview'
+import { getOrderList, deleteOrder } from '@/api/manage'
+import { formatOrderDetail } from '@/utils'
 
 export default {
   components: {
@@ -92,33 +104,103 @@ export default {
   data() {
     return {
       form: {
-        name: '',
-        date1: '',
-        date2: '',
-        id: '',
-        row: 1
+        client: '',
+        startTime: '',
+        endTime: '',
+        jobName: '',
+        sort: 1
       },
       orderList: [],
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      totalPage: 0,
+      selectOrder: []
     }
   },
 
   created() {
-    this.orderList = [{
-      id: 123,
-      name: 'halo',
-      createdTime: 1570112816401
-    }]
+    this.updatePreviewData({})
+    this.getOrderList()
   },
 
   methods: {
-    onSubmit() {},
-    handleSelectionChange(val) {},
-    preview(data) {},
-    deleteOne(data) {},
-    jump() {
-      this.$router.replace({ path: '/order/add' })
+    ...mapMutations({
+      updatePreviewData: 'template/UPDATE_PREVIEWDATA'
+    }),
+    getOrderList() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const reqData = {
+        page: this.currentPage,
+        ...this.form
+      }
+      getOrderList(reqData).then((data) => {
+        data.list.forEach((order) => {
+          order.detail = formatOrderDetail(order.detail)
+        })
+        this.orderList = data.list
+        this.totalPage = data.total
+        loading.close()
+      }).catch(() => {
+        this.orderList = []
+        loading.close()
+      })
+    },
+    resetSearch() {
+      this.form = {
+        client: '',
+        startTime: '',
+        endTime: '',
+        jobName: '',
+        sort: 1
+      }
+    },
+    onSubmit() {
+      this.currentPage = 1
+      this.getOrderList()
+    },
+    handleSelectionChange(val) {
+      this.selectOrder = val
+    },
+    preview(data) {
+      this.updatePreviewData(data.detail)
+    },
+    deleteOrder(message, data) {
+      this.$confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+        .then(() => {
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          deleteOrder(data).then(() => {
+            this.$message.success('删除成功')
+            loading.close()
+            setTimeout(() => {
+              this.currentPage = 1
+              this.getOrderList()
+            }, 500)
+          }).catch(() => {
+            loading.close()
+          })
+        }).catch(() => {})
+    },
+    deleteOne(data) {
+      this.deleteOrder('确定要删除本条工单吗？')
+    },
+    deleteMult() {
+      if (!this.selectOrder.length) {
+        return this.$message.error('请勾选需要删除的工单')
+      }
+      this.deleteOrder('确定要删除所有选中工单吗？')
     }
   }
 }
@@ -135,7 +217,9 @@ export default {
 }
 .el-input__inner {
   height: 36px;
-  width: 190px;
+}
+.el-input__suffix {
+  right: 0;
 }
 .el-table {
   th {
@@ -148,7 +232,7 @@ export default {
 }
 .order {
   padding: 20px 10px 20px 10px;
-  width: 50%;
+  flex: 1;
   background: #fff;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
   &-handle {
@@ -176,7 +260,29 @@ export default {
     margin-left: 10px;
   }
   &-preview {
-    flex: 1
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    // &-wrap {
+    //   width: 364px;
+    //   height: 570px;
+    // }
+    padding-top: 42px;
+    &-wrap {
+      // 根据设计稿扩大了1.5倍大小再缩放
+      // width: 546px;
+      // height: 833px;
+      width: 728px;
+      height: 1088px;
+      transform-origin: top center;
+      // transform: scale(0.75);
+      transform: scale(.5);
+      .preview-btn {
+        margin-top: 60px;
+        transform: scale(2)
+        // transform: scale(1.5)
+      }
+    }
   }
   label {
     font-weight: 500
