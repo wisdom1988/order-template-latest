@@ -5,7 +5,10 @@ export default {
     status: 1,
     userInfo: {},
     previewData: {},
-    editData: {}
+    editData: {},
+    tempId: 0,
+    jobId: 0,
+    jobName: ''
   },
 
   mutations: {
@@ -23,6 +26,18 @@ export default {
 
     UPDATE_EDITDATA: (state, editData) => {
       state.editData = editData
+    },
+
+    UPDATE_TEMPID: (state, tempId) => {
+      state.tempId = tempId
+    },
+
+    UPDATE_JOBID: (state, jobId) => {
+      state.jobId = jobId
+    },
+
+    UPDATE_JOBNAME: (state, jobName) => {
+      state.jobName = jobName
     }
   }
 }

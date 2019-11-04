@@ -29,12 +29,30 @@ export function addUser(data) {
   })
 }
 
+// 编辑用户
+export function editUser(data) {
+  return request({
+    url: '/user/editUserInfo',
+    method: 'post',
+    data
+  })
+}
+
+// 删除用户
+export function deleteUser(data) {
+  return request({
+    url: '/user/delete',
+    method: 'post',
+    data
+  })
+}
+
 // 获取工单模板列表
-export function getTemplateList(params) {
+export function getTemplateList(data) {
   return request({
     url: '/orderTemplate/list',
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
@@ -92,6 +110,15 @@ export function getOrderList(data) {
 export function addOrder(data) {
   return request({
     url: '/job/createJob',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑工单
+export function editOrder(data) {
+  return request({
+    url: '/job/editJob',
     method: 'post',
     data
   })

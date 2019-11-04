@@ -28,15 +28,15 @@
       </div>
     </div>
     <div v-if="showBtns" class="preview-btn">
-      <el-button type="primary" size="small" plain>文件</el-button>
-      <el-button type="primary" size="small" plain>编辑</el-button>
+      <el-button type="primary" size="small" plain @click="upload">文件</el-button>
+      <el-button type="primary" size="small" plain @click="editOrder">编辑</el-button>
       <el-button type="primary" size="small" plain>打印</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   filters: {
@@ -58,6 +58,28 @@ export default {
     ...mapState({
       previewData: ({ template }) => template.previewData
     })
+  },
+
+  methods: {
+    ...mapMutations({
+      updateEditData: 'template/UPDATE_EDITDATA'
+    }),
+    editOrder() {
+      const valid = Object.keys(this.previewData)
+      if (!valid.length) {
+        // return this.$message({
+        //   message: '请先点击"预览"需要编辑的工单',
+        //   type: 'warn'
+        // })
+        return this.$message.error('请先点击"预览"需要编辑的工单')
+      }
+      this.updateEditData(this.previewData)
+      this.$router.push('/order/list/edit')
+    },
+    upload() {
+      // 临时
+      this.$router.push('/order/list/upload')
+    }
   }
 }
 </script>

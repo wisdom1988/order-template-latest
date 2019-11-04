@@ -63,7 +63,8 @@ export default {
 
   methods: {
     ...mapMutations({
-      updateEditData: 'template/UPDATE_EDITDATA'
+      updateEditData: 'template/UPDATE_EDITDATA',
+      updateTempId: 'template/UPDATE_TEMPID'
     }),
     getTemplateList() {
       const loading = this.$loading({
@@ -81,7 +82,7 @@ export default {
         this.templateList = data.list
         this.activeTempId = data.list[0].tempId
         this.updateEditData(data.list[0].params)
-        this.$emit('choose', data.list[0].tempId)
+        this.updateTempId(data.list[0].tempId)
         // this.templateData = data.list[0].params
         loading.close()
       }).catch(() => {
@@ -128,7 +129,7 @@ export default {
 
     chooseTemplate(item) {
       this.activeTempId = item.tempId
-      this.$emit('choose', item.tempId)
+      this.updateTempId(item.tempId)
     }
   }
 }

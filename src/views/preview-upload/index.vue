@@ -1,11 +1,11 @@
 <template>
-  <div class="upload">
-    <div class="upload-preview">
-      <div class="upload-preview-wrap">
-        <preview :preview-data="previewData" @click="fullscreen = true" />
+  <div class="attach">
+    <div class="attach-preview">
+      <div class="attach-preview-wrap">
+        <preview @click="fullscreen = true" />
       </div>
     </div>
-    <div class="upload-upload">
+    <div class="attach-upload">
       <order-upload />
     </div>
     <fullscreen-preview :fullscreen="fullscreen" @close="fullscreen = false" />
@@ -35,12 +35,19 @@ export default {
     ...mapState({
       previewData: ({ template }) => template.previewData
     })
+  },
+
+  beforeRouteEnter(to, from, next) {
+    if (from.path !== '/order/list/add' && from.path !== '/order/list/edit') {
+      return next('/order/list')
+    }
+    next()
   }
 }
 </script>
 
 <style lang="scss">
-.upload {
+.attach {
   display: flex;
   flex: 1;
   height: 100%;
@@ -68,6 +75,7 @@ export default {
   }
   &-upload {
     width: 370px;
+    min-width: 370px;
     height: 100%;
     background: #fff;
   }

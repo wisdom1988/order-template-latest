@@ -45,10 +45,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { deepCopy, flatArr } from '@/utils'
 import { getUserId } from '@/utils/auth'
-import { addOrder } from '@/api/manage'
+import { addOrder, editOrder } from '@/api/manage'
 
 export default {
   filters: {
@@ -63,14 +63,6 @@ export default {
     type: {
       type: Number, // 0 新建 1 编辑
       required: true
-    },
-    // templateData: {
-    //   type: Object,
-    //   default: () => {}
-    // },
-    tempId: {
-      type: Number,
-      default: 0
     }
   },
 
@@ -82,7 +74,9 @@ export default {
 
   computed: {
     ...mapState({
-      editData: ({ template }) => template.editData
+      editData: ({ template }) => template.editData,
+      tempId: ({ template }) => template.tempId,
+      jobId: ({ template }) => template.jobId
     }),
     originData() {
       return deepCopy(this.editData)
@@ -99,19 +93,10 @@ export default {
   },
 
   methods: {
-    // getDefaultValue(item) {
-    //   if (item.showType === 1) {
-    //     return item.option
-    //   }
-    //   let value
-    //   item.option.some((v) => {
-    //     if (v.isDefault) {
-    //       value = v.text
-    //       return true
-    //     }
-    //   })
-    //   return value
-    // },
+    ...mapMutations({
+      updateJobId: 'template/UPDATE_JOBID',
+      updateJobName: 'template/UPDATE_JOBNAME'
+    }),
     resetData() {
       this.renderData = deepCopy(this.originData)
     },
@@ -155,14 +140,22 @@ export default {
       })
       const { valid, client, jobName } = this.validateData(orderDetail)
       if (!valid) return
-      const reqData = {
+      const baseData = {
         jobName,
         client,
         orderDetail,
         tempId: +this.tempId,
         userId: +getUserId()
       }
-      console.log(reqData)
+      let reqData = baseData
+      let method = addOrder
+      if (this.type) {
+        reqData = {
+          ...baseData,
+          id: this.jobId
+        }
+        method = editOrder
+      }
       // 发送创建/编辑工单的请求，后跳转至预览+上传附件页面
       const loading = this.$loading({
         lock: true,
@@ -170,8 +163,12 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      addOrder(reqData).then((data) => {
+      method(reqData).then((data) => {
+        this.updateJobName(jobName)
         this.$emit('save', this.renderData)
+        if (!this.type) {
+          this.updateJobId(data)
+        }
         loading.close()
       }).catch(() => {
         loading.close()

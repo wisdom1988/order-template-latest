@@ -125,7 +125,10 @@ export default {
 
   methods: {
     ...mapMutations({
-      updatePreviewData: 'template/UPDATE_PREVIEWDATA'
+      updatePreviewData: 'template/UPDATE_PREVIEWDATA',
+      updateJobId: 'template/UPDATE_JOBID',
+      updateJobName: 'template/UPDATE_JOBNAME',
+      updateTempId: 'template/UPDATE_TEMPID'
     }),
     getOrderList() {
       const loading = this.$loading({
@@ -168,6 +171,9 @@ export default {
     },
     preview(data) {
       this.updatePreviewData(data.detail)
+      this.updateJobId(data.id)
+      this.updateJobName(data.jobName)
+      this.updateTempId(data.tempId)
     },
     deleteOrder(message, data) {
       this.$confirm(message, '提示', {
@@ -194,13 +200,16 @@ export default {
         }).catch(() => {})
     },
     deleteOne(data) {
-      this.deleteOrder('确定要删除本条工单吗？')
+      this.deleteOrder('确定要删除本条工单吗？', { ids: [data.id] })
     },
     deleteMult() {
       if (!this.selectOrder.length) {
         return this.$message.error('请勾选需要删除的工单')
       }
-      this.deleteOrder('确定要删除所有选中工单吗？')
+      const ids = this.selectOrder.map(item => {
+        return item.id
+      })
+      this.deleteOrder('确定要删除所有选中工单吗？', { ids })
     }
   }
 }

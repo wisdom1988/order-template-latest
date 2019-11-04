@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function resetPassword(data) {
+  return request({
+    url: '/user/resetPassword',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo(userId) {
   return request({
     url: '/user/info',
@@ -16,9 +24,9 @@ export function getInfo(userId) {
   })
 }
 
-export function logout() {
+export function getVerify() {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/cap.php',
+    method: 'get'
   })
 }

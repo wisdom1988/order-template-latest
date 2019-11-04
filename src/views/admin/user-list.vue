@@ -52,7 +52,7 @@
       <el-pagination
         background
         :current-page.sync="currentPage"
-        :page-size="2"
+        :page-size="pageSize"
         layout="total, prev, pager, next"
         :total="total"
         @current-change="changePage"
@@ -73,12 +73,16 @@ export default {
       userList: [],
       total: null,
       currentPage: 1,
-      pageSize: 2
+      pageSize: 5
     }
   },
 
   created() {
-    this.getList(this.currentPage)
+    this.getList()
+  },
+
+  activated() {
+    this.getList()
   },
 
   methods: {

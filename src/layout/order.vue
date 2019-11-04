@@ -15,7 +15,6 @@ export default {
   name: 'Layout',
   components: {
     Navbar,
-    // Sidebar,
     AppMain,
     Logobar
   },

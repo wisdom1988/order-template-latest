@@ -3,34 +3,23 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img src="./avatar.gif?imageView2/1/w/80/h/80" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item>
+          <el-dropdown-item class="is-disabled user">
             {{ name }}
           </el-dropdown-item>
-          <router-link to="/settings">
+          <router-link to="/order/list">
             <el-dropdown-item>
-              设置
+              工单列表
             </el-dropdown-item>
           </router-link>
-          <router-link to="/admin">
+          <router-link v-if="userType" to="/admin">
             <el-dropdown-item>
               控制面板
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">Log Out</span>
           </el-dropdown-item>
@@ -41,23 +30,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import { removeToken, removeUserId } from '@/utils/auth'
 
 export default {
   computed: {
     ...mapGetters([
-      'avatar',
-      'name'
+      'name', 'userType'
     ])
   },
   methods: {
-    async logout() {
-      await this.$store.dispatch('user/logout')
+    ...mapMutations({
+      setUserName: 'user/SET_NAME'
+    }),
+    logout() {
+      removeToken()
+      removeUserId()
+      this.setUserName('')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 }
 </script>
+
+<style lang="scss">
+.user.el-dropdown-menu__item.is-disabled {
+  color: #606266;
+}
+</style>
 
 <style lang="scss" scoped>
 .logobar {
@@ -66,7 +66,6 @@ export default {
   position: relative;
   background: #2e4156 url('./logo.png') 24px center no-repeat;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
   .right-menu {
     float: right;
     height: 100%;

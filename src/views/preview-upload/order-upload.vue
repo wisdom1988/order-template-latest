@@ -1,42 +1,66 @@
 <template>
-  <div class="uploader-wrap">
-    <uploader
-      ref="uploader"
-      :options="options"
-      class="uploader-example"
-      @file-progress="setProgress"
-    >
-      <uploader-unsupport />
-      <uploader-drop>
-        <i class="el-icon-cloudy" />
-      </uploader-drop>
-      <uploader-list />
-      <uploader-btn>上传</uploader-btn>
-      <button class="uploader-cancel" @click="cancelUpload">取消</button>
-    </uploader>
-    <div class="uploader-progress">
-      <el-progress
-        type="circle"
-        :percentage="uploaderProgress"
-        :width="30"
-        :stroke-width="3"
-        :show-text="false"
-        class="uploader-progress-circle"
-      />
+  <div class="upload-wrap">
+    <div class="upload-title">上传文件</div>
+    <div class="upload">
+      <uploader
+        ref="uploader"
+        :options="options"
+        @upload-start="showProgress = true"
+        @complete="showProgress = false"
+        @file-progress="setProgress"
+        @file-removed="handleRemove"
+        @file-success="handleSuccess"
+      >
+        <uploader-unsupport />
+        <uploader-drop>
+          <img src="./icon_upload.png">
+        </uploader-drop>
+        <uploader-list />
+        <div class="uploader-handle">
+          <uploader-btn class="uploader-up">上传</uploader-btn>
+          <button class="uploader-cancel" @click="cancelUpload">取消</button>
+        </div>
+      </uploader>
+      <div v-if="showProgress" class="upload-progress">
+        <el-progress
+          type="circle"
+          :percentage="uploaderProgress"
+          :width="30"
+          :stroke-width="3"
+          :show-text="false"
+          class="upload-progress-circle"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
-      options: {
-        target:
-          'https://github.com/simple-uploader/Uploader/tree/develop/samples/Node.js'
-      },
+      showProgress: false,
       uploaderProgress: 0,
       uploader: null
+    }
+  },
+
+  computed: {
+    ...mapState({
+      jobName: ({ template }) => template.jobName
+    }),
+    options() {
+      return {
+        target:
+        '/v1/upload',
+        method: 'multipart',
+        testMethod: 'post',
+        query: {
+          savePath: this.jobName
+        }
+      }
     }
   },
 
@@ -46,29 +70,83 @@ export default {
 
   methods: {
     setProgress(rootFile, file, chunk) {
-      console.log(rootFile, file, chunk)
+      // console.log(rootFile, file, chunk)
       this.uploaderProgress = this.uploader.progress() * 100
     },
     cancelUpload() {
+      // this.$confirm('', '确定要删除', {
+
+      // })
       this.uploader.cancel()
+      this.showProgress = false
+    },
+    handleRemove(file) {
+      console.log(file)
+    },
+    handleSuccess(rootFile, file, message, chunk) {
+      console.log(rootFile, file, message, chunk)
     }
   }
 }
 </script>
 
 <style lang="scss">
-.uploader {
+.upload {
+  position: relative;
   &-wrap {
     position: relative;
+    padding: 32px 20px;
   }
-  &-drop {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 330px;
-    height: 180px;
-    background: #f6f7f9;
-    border: 1px solid rgba(110, 118, 143, 0.2);
+  &-title {
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+  }
+  .uploader {
+    &-drop {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 330px;
+      height: 180px;
+      background: #f6f7f9;
+      border: 1px dashed rgba(110, 118, 143, 0.2);
+    }
+    &-handle {
+      margin-top: 28px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &-up {
+      margin-right: 20px;
+      padding: 0;
+      width: 155px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 30px;
+      height: 32px;
+      color: #fff;
+      text-align: center;
+      background: #3A78EA;
+      border-radius: 16px;
+      border: 1px solid #3A78EA;
+      &:hover {
+        background: #3A78EA;
+      }
+    }
+    &-cancel {
+      flex: 1;
+      font-size: 13px;
+      color: #3A78EA;
+      line-height: 30px;
+      background: #fff;
+      text-align: center;
+      border: 1px solid #3A78EA;
+      border-radius: 16px;
+      cursor: pointer;
+      outline: none;
+    }
   }
   &-progress {
     position: absolute;
@@ -87,24 +165,24 @@ export default {
   &-file-progress {
     background: #fff !important;
   }
-  &-btn,
-  &-cancel {
-    margin-top: 28px;
-    width: 155px;
-    border-radius: 17px;
-    font-size: 13px;
-    text-align: center;
-    line-height: 30px;
-  }
-  &-btn {
-    background: #3a78ea;
-  }
-  &-cancel {
-    margin-left: 20px;
-    border: 1px solid #3a78ea;
-    background: #fff;
-    color: #3a78ea;
-  }
+  // &-btn,
+  // &-cancel {
+  //   margin-top: 28px;
+  //   width: 155px;
+  //   border-radius: 17px;
+  //   font-size: 13px;
+  //   text-align: center;
+  //   line-height: 30px;
+  // }
+  // &-btn {
+  //   background: #3a78ea;
+  // }
+  // &-cancel {
+  //   margin-left: 20px;
+  //   border: 1px solid #3a78ea;
+  //   background: #fff;
+  //   color: #3a78ea;
+  // }
   &-list {
     width: 330px;
   }

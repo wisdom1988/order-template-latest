@@ -1,8 +1,8 @@
 <template>
   <div class="add">
-    <template-list @choose="chooseTemplate" />
+    <template-list />
     <div class="add-order">
-      <order-detail :type="0" :temp-id="tempId" @save="setSavedData" />
+      <order-detail :type="0" @save="setSavedData" />
     </div>
   </div>
 </template>
@@ -21,7 +21,6 @@ export default {
   data() {
     return {
       // templateData: {}, // {1: [], 2: [], 3:[]} 工单/生产/自定义参数三部分的格式化数据
-      tempId: null
       // renderData: null
     }
   },
@@ -30,10 +29,6 @@ export default {
     ...mapMutations({
       updatePreviewData: 'template/UPDATE_PREVIEWDATA'
     }),
-    chooseTemplate(item, tempId) {
-      // this.templateData = item
-      this.tempId = tempId
-    },
 
     setSavedData(data) {
       // this.renderData = data
