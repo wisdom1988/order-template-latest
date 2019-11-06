@@ -35,6 +35,10 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+    const uploadIndex = config.url.indexOf('/v1')
+    if (uploadIndex > -1) {
+      config.url = config.url.slice(uploadIndex)
+    }
 
     if (store.getters.token) {
       // let each request carry token

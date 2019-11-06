@@ -37,6 +37,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mergeFile, deleteFile } from '@/api/manage'
 
 export default {
   data() {
@@ -74,17 +75,27 @@ export default {
       this.uploaderProgress = this.uploader.progress() * 100
     },
     cancelUpload() {
-      // this.$confirm('', '确定要删除', {
-
-      // })
-      this.uploader.cancel()
-      this.showProgress = false
+      this.$confirm('', '确定要删除/取消上传的文件吗？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.uploader.cancel()
+        this.showProgress = false
+        deleteFile({ savePath: this.jobName })
+      }).catch(() => {})
     },
     handleRemove(file) {
       console.log(file)
     },
     handleSuccess(rootFile, file, message, chunk) {
-      console.log(rootFile, file, message, chunk)
+      const { uniqueIdentifier: identifier, name } = file
+      const suffix = name.split('.').slice(-1)
+      console.log(suffix)
+      mergeFile({
+        identifier,
+        suffix,
+        savePath: this.jobName
+      })
     }
   }
 }

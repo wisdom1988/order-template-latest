@@ -11,6 +11,24 @@ export function uploadImg(file) {
   })
 }
 
+// 大文件合并通知
+export function mergeFile(data) {
+  return request({
+    url: '/v1/merge',
+    method: 'post',
+    data
+  })
+}
+
+// 文件删除
+export function deleteFile(data) {
+  return request({
+    url: '/v1/delete',
+    method: 'post',
+    data
+  })
+}
+
 // 获取用户列表
 export function getUserList(data) {
   return request({
