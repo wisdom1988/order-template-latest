@@ -38,7 +38,7 @@ export default {
   },
 
   beforeRouteEnter(to, from, next) {
-    if (from.path !== '/order/list/add' && from.path !== '/order/list/edit') {
+    if (from.path.indexOf('/order/list') === -1) {
       return next('/order/list')
     }
     next()

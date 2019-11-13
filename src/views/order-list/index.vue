@@ -64,9 +64,11 @@
           />
           <el-table-column
             label="操作"
+            width="140"
           >
             <template slot-scope="scope">
               <el-button type="text" size="small" style="color:#F56C6C;" @click="preview(scope.row)">预览</el-button>
+              <el-button type="text" size="small" @click="copyOne(scope.row)">复制</el-button>
               <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -76,8 +78,9 @@
           background
           layout="prev, pager, next"
           :current-page="currentPage"
-          :page-size="pageSize"
-          :total="totalPage"
+          :page-size="20"
+          :total="total"
+          @current-change="changePage"
           class="order-pagination"
         />
       </div>
@@ -93,7 +96,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import Preview from '@/components/preview'
-import { getOrderList, deleteOrder } from '@/api/manage'
+import { getOrderList, deleteOrder, copyOrder } from '@/api/manage'
 import { formatOrderDetail } from '@/utils'
 
 export default {
@@ -112,8 +115,8 @@ export default {
       },
       orderList: [],
       currentPage: 1,
-      pageSize: 10,
-      totalPage: 0,
+      pageSize: 20,
+      total: 0,
       selectOrder: []
     }
   },
@@ -128,7 +131,8 @@ export default {
       updatePreviewData: 'template/UPDATE_PREVIEWDATA',
       updateJobId: 'template/UPDATE_JOBID',
       updateJobName: 'template/UPDATE_JOBNAME',
-      updateTempId: 'template/UPDATE_TEMPID'
+      updateTempId: 'template/UPDATE_TEMPID',
+      updateSavePath: 'template/UPDATE_SAVEPATH'
     }),
     getOrderList() {
       const loading = this.$loading({
@@ -143,15 +147,19 @@ export default {
       }
       getOrderList(reqData).then((data) => {
         data.list.forEach((order) => {
-          order.detail = formatOrderDetail(order.detail)
+          order.detail = formatOrderDetail(order.detail, order.jobName)
         })
         this.orderList = data.list
-        this.totalPage = data.total
+        this.total = data.total
         loading.close()
       }).catch(() => {
         this.orderList = []
         loading.close()
       })
+    },
+    changePage(page) {
+      this.currentPage = page
+      this.getOrderList()
     },
     resetSearch() {
       this.form = {
@@ -174,6 +182,7 @@ export default {
       this.updateJobId(data.id)
       this.updateJobName(data.jobName)
       this.updateTempId(data.tempId)
+      this.updateSavePath(data.savePath)
     },
     deleteOrder(message, data) {
       this.$confirm(message, '提示', {
@@ -210,6 +219,19 @@ export default {
         return item.id
       })
       this.deleteOrder('确定要删除所有选中工单吗？', { ids })
+    },
+    copyOne(data) {
+      this.$confirm('', '确定要复制当前工单吗？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        center: true
+      }).then(() => {
+        copyOrder(data.id).then(() => {
+          this.$message.success(`复制成功,工单号为：${data.jobName}复制`)
+          this.currentPage = 1
+          this.getOrderList()
+        })
+      }).catch(() => {})
     }
   }
 }

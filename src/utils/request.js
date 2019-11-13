@@ -37,7 +37,7 @@ service.interceptors.request.use(
     // do something before request is sent
     const uploadIndex = config.url.indexOf('/v1')
     if (uploadIndex > -1) {
-      config.url = config.url.slice(uploadIndex)
+      config.baseURL = ''
     }
 
     if (store.getters.token) {

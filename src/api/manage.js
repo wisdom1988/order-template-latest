@@ -142,6 +142,15 @@ export function editOrder(data) {
   })
 }
 
+// 复制工单
+export function copyOrder(id) {
+  return request({
+    url: '/job/copyJob',
+    method: 'post',
+    data: { id }
+  })
+}
+
 // 删除工单
 export function deleteOrder(data) {
   return request({

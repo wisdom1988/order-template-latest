@@ -8,7 +8,8 @@ export default {
     editData: {},
     tempId: 0,
     jobId: 0,
-    jobName: ''
+    jobName: '',
+    savePath: ''
   },
 
   mutations: {
@@ -38,6 +39,10 @@ export default {
 
     UPDATE_JOBNAME: (state, jobName) => {
       state.jobName = jobName
+    },
+
+    UPDATE_SAVEPATH: (state, savePath) => {
+      state.savePath = savePath
     }
   }
 }

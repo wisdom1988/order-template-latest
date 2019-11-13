@@ -50,7 +50,7 @@ export default {
 
   computed: {
     ...mapState({
-      jobName: ({ template }) => template.jobName
+      savePath: ({ template }) => template.savePath
     }),
     options() {
       return {
@@ -59,7 +59,7 @@ export default {
         method: 'multipart',
         testMethod: 'post',
         query: {
-          savePath: this.jobName
+          savePath: this.savePath
         }
       }
     }
@@ -71,17 +71,17 @@ export default {
 
   methods: {
     setProgress(rootFile, file, chunk) {
-      // console.log(rootFile, file, chunk)
       this.uploaderProgress = this.uploader.progress() * 100
     },
     cancelUpload() {
       this.$confirm('', '确定要删除/取消上传的文件吗？', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        cancelButtonText: '取消',
+        center: true
       }).then(() => {
         this.uploader.cancel()
         this.showProgress = false
-        deleteFile({ savePath: this.jobName })
+        deleteFile({ savePath: this.savePath })
       }).catch(() => {})
     },
     handleRemove(file) {
@@ -89,12 +89,11 @@ export default {
     },
     handleSuccess(rootFile, file, message, chunk) {
       const { uniqueIdentifier: identifier, name } = file
-      const suffix = name.split('.').slice(-1)
-      console.log(suffix)
+      const suffix = `.${name.split('.').slice(-1)[0]}`
       mergeFile({
         identifier,
         suffix,
-        savePath: this.jobName
+        savePath: this.savePath
       })
     }
   }

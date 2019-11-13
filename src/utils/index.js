@@ -161,10 +161,13 @@ export function getDefaultValue(item) {
  * @param {Array} arr
  * @returns {Object}
  */
-export function formatOrderDetail(arr) {
+export function formatOrderDetail(arr, jobName) {
   // 将工单分为1(工单参数),2(生产参数),3(自定义参数)三个部分
   const detailData = {}
   arr.forEach((item) => {
+    if (item.type === 1 && item.name === '工单号') {
+      item.value = jobName
+    }
     if (detailData[item.type]) {
       detailData[item.type].push(item)
     } else {
