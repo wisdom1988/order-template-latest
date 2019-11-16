@@ -39,8 +39,7 @@ service.interceptors.request.use(
     if (uploadIndex > -1) {
       config.baseURL = process.env.VUE_APP_FILE_API || ''
     }
-
-    if (store.getters.token) {
+    if (store.getters.token && uploadIndex === -1) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
