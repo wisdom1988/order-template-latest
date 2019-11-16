@@ -55,7 +55,7 @@ export default {
     options() {
       return {
         target:
-        '/v1/upload',
+        'http://47.102.149.201:8622/v1/upload',
         method: 'multipart',
         testMethod: 'post',
         query: {
