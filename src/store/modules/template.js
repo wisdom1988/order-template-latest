@@ -9,7 +9,8 @@ export default {
     tempId: 0,
     jobId: 0,
     jobName: '',
-    savePath: ''
+    savePath: '',
+    isPrint: false
   },
 
   mutations: {
@@ -43,6 +44,10 @@ export default {
 
     UPDATE_SAVEPATH: (state, savePath) => {
       state.savePath = savePath
+    },
+
+    UPDATE_ISPRINT: (state, boolean) => {
+      state.isPrint = boolean
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="attach">
     <div class="attach-preview">
-      <div class="attach-preview-wrap">
+      <div class="attach-preview-wrap" :class="{print: isPrint}">
         <preview @click="fullscreen = true" />
       </div>
     </div>
@@ -33,7 +33,8 @@ export default {
 
   computed: {
     ...mapState({
-      previewData: ({ template }) => template.previewData
+      previewData: ({ template }) => template.previewData,
+      isPrint: ({ template }) => template.isPrint
     })
   },
 
@@ -71,6 +72,9 @@ export default {
         transform: scale(2)
         // transform: scale(1.5)
       }
+    }
+    .print {
+      transform: none
     }
   }
   &-upload {

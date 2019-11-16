@@ -58,6 +58,7 @@ export default {
         'http://47.102.149.201:8622/v1/upload',
         method: 'multipart',
         testMethod: 'post',
+        testChunks: false,
         query: {
           savePath: this.savePath
         }

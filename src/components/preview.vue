@@ -1,5 +1,5 @@
 <template>
-  <div class="preview-wrap">
+  <div class="preview-wrap" :class="{print: isPrint}" >
     <div class="preview" @click="$emit('click')">
       <h5 class="preview-title">生产施工单</h5>
       <div
@@ -56,7 +56,8 @@ export default {
 
   computed: {
     ...mapState({
-      previewData: ({ template }) => template.previewData
+      previewData: ({ template }) => template.previewData,
+      isPrint: ({ template }) => template.isPrint
     }),
     canHandle() {
       const valid = Object.keys(this.previewData)
@@ -66,11 +67,9 @@ export default {
 
   methods: {
     ...mapMutations({
-      updateEditData: 'template/UPDATE_EDITDATA'
+      updateEditData: 'template/UPDATE_EDITDATA',
+      updateIsPrint: 'template/UPDATE_ISPRINT'
     }),
-    validBeforeHandle() {
-
-    },
     editOrder() {
       if (!this.canHandle) return this.$message.error('请先点击"预览"需要编辑的工单')
       this.updateEditData(this.previewData)
@@ -82,7 +81,13 @@ export default {
     },
     print() {
       if (!this.canHandle) return this.$message.error('请先点击"预览"需要打印的工单')
-      // window.print()
+      this.updateIsPrint(true)
+      this.$nextTick(() => {
+        window.print()
+        setTimeout(() => {
+          this.updateIsPrint(false)
+        })
+      })
     }
   }
 }
@@ -166,13 +171,7 @@ h5 {
     border-right: 1px solid #000;
     border-bottom: 1px solid #000;
     font-size: 12px;
-    line-height: 18px;
-    // &-name {
-    //   span {
-    //     display: inline-block;
-    //     line-height: 32px;
-    //   }
-    // }
+    line-height: 24px;
     &:nth-child(2n) {
       padding-left: 4px;
       text-align: left;
@@ -183,5 +182,26 @@ h5 {
 		margin-top: 30px;
 		text-align: center;
 	}
+}
+
+.order-preview-wrap.print,
+.preview-wrap.print {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  padding: 60px 40px;
+  background: #fff;
+  .preview {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    font-size: 24px;
+    line-height: 42px;
+  }
+  .preview-btn {
+    display: none;
+  }
 }
 </style>

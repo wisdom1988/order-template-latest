@@ -86,7 +86,7 @@
       </div>
     </div>
     <div class="order-preview">
-      <div class="order-preview-wrap">
+      <div class="order-preview-wrap" :class="{print: isPrint}">
         <preview />
       </div>
     </div>
@@ -128,7 +128,8 @@ export default {
 
   computed: {
     ...mapState({
-      userId: ({ user }) => user.userId
+      userId: ({ user }) => user.userId,
+      isPrint: ({ template }) => template.isPrint
     })
   },
 
@@ -320,6 +321,9 @@ export default {
         transform: scale(2)
         // transform: scale(1.5)
       }
+    }
+    .print {
+      transform: none;
     }
   }
   label {
