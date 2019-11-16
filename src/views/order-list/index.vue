@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import Preview from '@/components/preview'
 import { getOrderList, deleteOrder, copyOrder } from '@/api/manage'
 import { formatOrderDetail } from '@/utils'
@@ -126,6 +126,12 @@ export default {
     this.getOrderList()
   },
 
+  computed: {
+    ...mapState({
+      userId: ({ user }) => user.userId
+    })
+  },
+
   methods: {
     ...mapMutations({
       updatePreviewData: 'template/UPDATE_PREVIEWDATA',
@@ -143,6 +149,7 @@ export default {
       })
       const reqData = {
         page: this.currentPage,
+        userId: this.userId,
         ...this.form
       }
       getOrderList(reqData).then((data) => {

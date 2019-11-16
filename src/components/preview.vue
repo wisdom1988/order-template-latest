@@ -30,7 +30,7 @@
     <div v-if="showBtns" class="preview-btn">
       <el-button type="primary" size="small" plain @click="upload">文件</el-button>
       <el-button type="primary" size="small" plain @click="editOrder">编辑</el-button>
-      <el-button type="primary" size="small" plain>打印</el-button>
+      <el-button type="primary" size="small" plain @click="print">打印</el-button>
     </div>
   </div>
 </template>
@@ -67,18 +67,20 @@ export default {
     editOrder() {
       const valid = Object.keys(this.previewData)
       if (!valid.length) {
-        // return this.$message({
-        //   message: '请先点击"预览"需要编辑的工单',
-        //   type: 'warn'
-        // })
         return this.$message.error('请先点击"预览"需要编辑的工单')
       }
       this.updateEditData(this.previewData)
       this.$router.push('/order/list/edit')
     },
     upload() {
-      // 临时
+      const valid = Object.keys(this.previewData)
+      if (!valid.length) {
+        return this.$message.error('请先点击"预览"需要上传文件的工单')
+      }
       this.$router.push('/order/list/upload')
+    },
+    print() {
+      // window.print()
     }
   }
 }
