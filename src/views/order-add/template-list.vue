@@ -130,6 +130,7 @@ export default {
     chooseTemplate(item) {
       this.activeTempId = item.tempId
       this.updateTempId(item.tempId)
+      this.updateEditData(item.params)
     }
   }
 }

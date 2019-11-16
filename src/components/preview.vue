@@ -57,29 +57,31 @@ export default {
   computed: {
     ...mapState({
       previewData: ({ template }) => template.previewData
-    })
+    }),
+    canHandle() {
+      const valid = Object.keys(this.previewData)
+      return !!valid.length
+    }
   },
 
   methods: {
     ...mapMutations({
       updateEditData: 'template/UPDATE_EDITDATA'
     }),
+    validBeforeHandle() {
+
+    },
     editOrder() {
-      const valid = Object.keys(this.previewData)
-      if (!valid.length) {
-        return this.$message.error('请先点击"预览"需要编辑的工单')
-      }
+      if (!this.canHandle) return this.$message.error('请先点击"预览"需要编辑的工单')
       this.updateEditData(this.previewData)
       this.$router.push('/order/list/edit')
     },
     upload() {
-      const valid = Object.keys(this.previewData)
-      if (!valid.length) {
-        return this.$message.error('请先点击"预览"需要上传文件的工单')
-      }
+      if (!this.canHandle) return this.$message.error('请先点击"预览"需要上传文件的工单')
       this.$router.push('/order/list/upload')
     },
     print() {
+      if (!this.canHandle) return this.$message.error('请先点击"预览"需要打印的工单')
       // window.print()
     }
   }
