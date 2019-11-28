@@ -159,3 +159,12 @@ export function deleteOrder(data) {
     data
   })
 }
+
+// 启动工单
+export function startOrder(jobId) {
+  return request({
+    url: '/job/start',
+    method: 'post',
+    data: { jobId }
+  })
+}

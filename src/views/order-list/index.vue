@@ -139,7 +139,8 @@ export default {
       updateJobId: 'template/UPDATE_JOBID',
       updateJobName: 'template/UPDATE_JOBNAME',
       updateTempId: 'template/UPDATE_TEMPID',
-      updateSavePath: 'template/UPDATE_SAVEPATH'
+      updateSavePath: 'template/UPDATE_SAVEPATH',
+      updateTaskId: 'template/UPDATE_TASKID'
     }),
     getOrderList() {
       const loading = this.$loading({
@@ -191,6 +192,7 @@ export default {
       this.updateJobName(data.jobName)
       this.updateTempId(data.tempId)
       this.updateSavePath(data.savePath)
+      this.updateTaskId(data.taskId)
     },
     deleteOrder(message, data) {
       this.$confirm(message, '提示', {

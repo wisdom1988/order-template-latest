@@ -10,7 +10,8 @@ export default {
     jobId: 0,
     jobName: '',
     savePath: '',
-    isPrint: false
+    isPrint: false,
+    taskId: ''
   },
 
   mutations: {
@@ -48,6 +49,10 @@ export default {
 
     UPDATE_ISPRINT: (state, boolean) => {
       state.isPrint = boolean
+    },
+
+    UPDATE_TASKID: (state, string) => {
+      state.taskId = string
     }
   }
 }

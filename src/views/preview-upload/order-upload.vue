@@ -20,6 +20,9 @@
           <uploader-btn class="uploader-up">上传</uploader-btn>
           <button class="uploader-cancel" @click="cancelUpload">取消</button>
         </div>
+        <div class="uploader-start">
+          <button @click="startOrder">启动</button>
+        </div>
       </uploader>
       <div v-if="showProgress" class="upload-progress">
         <el-progress
@@ -37,7 +40,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { mergeFile, deleteFile } from '@/api/manage'
+import { mergeFile, deleteFile, startOrder } from '@/api/manage'
 
 export default {
   data() {
@@ -50,7 +53,8 @@ export default {
 
   computed: {
     ...mapState({
-      savePath: ({ template }) => template.savePath
+      savePath: ({ template }) => template.savePath,
+      taskId: ({ template }) => template.taskId
     }),
     options() {
       return {
@@ -68,6 +72,15 @@ export default {
 
   mounted() {
     this.uploader = this.$refs.uploader.uploader
+  },
+
+  watch: {
+    taskId: {
+      handler(val) {
+        console.log(val)
+      },
+      immediate: true
+    }
   },
 
   methods: {
@@ -95,6 +108,23 @@ export default {
         identifier,
         suffix,
         savePath: this.savePath
+      })
+    },
+    startOrder() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      startOrder(this.taskId).then(() => {
+        this.$message.success('工单启动成功')
+        loading.close()
+        setTimeout(() => {
+          this.$router.push('/order/list')
+        }, 1000)
+      }, () => {
+        loading.close()
       })
     }
   }
@@ -128,6 +158,17 @@ export default {
       margin-top: 28px;
       display: flex;
       justify-content: space-between;
+    }
+    &-start {
+      margin-top: 30px;
+      text-align: center;
+      button {
+        width: 200px;
+        line-height: 30px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+      }
     }
     &-up {
       margin-right: 20px;

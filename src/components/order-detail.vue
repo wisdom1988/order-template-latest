@@ -96,7 +96,8 @@ export default {
     ...mapMutations({
       updateJobId: 'template/UPDATE_JOBID',
       updateJobName: 'template/UPDATE_JOBNAME',
-      updateSavePath: 'template/UPDATE_SAVEPATH'
+      updateSavePath: 'template/UPDATE_SAVEPATH',
+      updateTaskId: 'template/UPDATE_TASKID'
     }),
     resetData() {
       this.renderData = deepCopy(this.originData)
@@ -167,6 +168,7 @@ export default {
       method(reqData).then((data) => {
         this.updateJobName(jobName)
         this.$emit('save', this.renderData)
+        this.updateTaskId(data.taskId)
         if (!this.type) {
           this.updateJobId(data.id)
           this.updateSavePath(data.savePath)
