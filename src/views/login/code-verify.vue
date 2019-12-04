@@ -4,8 +4,8 @@
       <div class="box-title">请输入图形验证码</div>
       <div class="box-content">
         <el-input v-model.trim="verifyCode" class="box-content-code" inline />
-        <img v-if="codeStatus" src="http://47.102.149.201/cap.php?v=0" alt="验证码" @click="codeStatus = false">
-        <img v-else src="http://47.102.149.201/cap.php?v=1" alt="验证" @click="codeStatus = true">
+        <img v-if="codeStatus" src="http://139.226.75.188:86/cap.php?v=0" alt="验证码" @click="codeStatus = false">
+        <img v-else src="http://139.226.75.188:86/cap.php?v=1" alt="验证" @click="codeStatus = true">
       </div>
       <div class="box-confirm" @click="confirm">确认</div>
     </div>

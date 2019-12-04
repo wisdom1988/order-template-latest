@@ -59,7 +59,7 @@ export default {
     options() {
       return {
         target:
-        'http://47.102.149.201:8622/v1/upload',
+        'http://139.226.75.188:8622/v1/upload',
         method: 'multipart',
         testMethod: 'post',
         testChunks: false,
