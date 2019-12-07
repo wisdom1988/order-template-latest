@@ -53,7 +53,6 @@ export default {
       })
       const { page, number } = this
       getTemplateList({ page, number }).then((data) => {
-        console.log(data)
         this.totol = data.total
         this.templateList = data.list
         loading.close()

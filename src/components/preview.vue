@@ -28,7 +28,8 @@
       </div>
     </div>
     <div v-if="showBtns" class="preview-btn">
-      <el-button type="primary" size="small" plain @click="upload">文件</el-button>
+      <el-button v-if="$route.path === '/order/list/main'" type="primary" size="small" plain @click="upload">文件</el-button>
+      <el-button v-if="$route.path === '/order/list/upload'" type="primary" size="small" plain @click="$router.push('/order/list/main')">返回</el-button>
       <el-button type="primary" size="small" plain @click="editOrder">编辑</el-button>
       <el-button type="primary" size="small" plain @click="print">打印</el-button>
     </div>
@@ -71,16 +72,16 @@ export default {
       updateIsPrint: 'template/UPDATE_ISPRINT'
     }),
     editOrder() {
-      if (!this.canHandle) return this.$message.error('请先点击"预览"需要编辑的工单')
+      if (!this.canHandle) return this.$message.error('请先点击需要上传文件的工单行')
       this.updateEditData(this.previewData)
       this.$router.push('/order/list/edit')
     },
     upload() {
-      if (!this.canHandle) return this.$message.error('请先点击"预览"需要上传文件的工单')
+      if (!this.canHandle) return this.$message.error('请先点击需要上传文件的工单行')
       this.$router.push('/order/list/upload')
     },
     print() {
-      if (!this.canHandle) return this.$message.error('请先点击"预览"需要打印的工单')
+      if (!this.canHandle) return this.$message.error('请先点击需要上传文件的工单行')
       this.updateIsPrint(true)
       this.$nextTick(() => {
         window.print()

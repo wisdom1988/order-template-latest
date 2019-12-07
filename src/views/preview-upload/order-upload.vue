@@ -74,15 +74,6 @@ export default {
     this.uploader = this.$refs.uploader.uploader
   },
 
-  watch: {
-    taskId: {
-      handler(val) {
-        console.log(val)
-      },
-      immediate: true
-    }
-  },
-
   methods: {
     setProgress(rootFile, file, chunk) {
       this.uploaderProgress = this.uploader.progress() * 100
@@ -168,6 +159,7 @@ export default {
         border: none;
         border-radius: 15px;
         cursor: pointer;
+        background: #ccc;
       }
     }
     &-up {

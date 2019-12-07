@@ -74,9 +74,6 @@ export default {
     ])
   },
   methods: {
-    // updateTemplateIcon(file, item) {
-    //   console.log(file, item)
-    // },
     imgLoadError(el, item) {
       el.src = IconTemplate
       item.icon = ''

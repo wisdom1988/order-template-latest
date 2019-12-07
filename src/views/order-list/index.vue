@@ -5,6 +5,16 @@
         <el-form-item label="客户名">
           <el-input v-model="form.client" />
         </el-form-item>
+        <el-form-item label="工单号">
+          <el-input v-model="form.jobName" />
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-select v-model="form.sort" placeholder="请选择排序条件">
+            <el-option label="创建时间" :value="1" />
+            <el-option label="工单名" :value="2" />
+            <el-option label="客户名" :value="3" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="工单日期">
           <el-col :span="11">
             <el-date-picker v-model="form.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" style="width: 100%;" />
@@ -20,16 +30,6 @@
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="工单号">
-          <el-input v-model="form.jobName" />
-        </el-form-item>
-        <el-form-item label="排序">
-          <el-select v-model="form.sort" placeholder="请选择排序条件">
-            <el-option label="创建时间" :value="1" />
-            <el-option label="工单名" :value="2" />
-            <el-option label="客户名" :value="3" />
-          </el-select>
-        </el-form-item>
         <el-form-item class="order-handle">
           <el-button type="primary" size="small" icon="el-icon-search" class="order-search" @click="onSubmit">搜索</el-button>
           <el-button type="text" size="small" @click="resetSearch">清空筛选条件</el-button>
@@ -42,6 +42,7 @@
           :data="orderList"
           style="width: 100%"
           @selection-change="handleSelectionChange"
+          @row-click="preview"
         >
           <el-table-column
             type="selection"
@@ -64,10 +65,10 @@
           />
           <el-table-column
             label="操作"
-            width="140"
+            width="170"
           >
             <template slot-scope="scope">
-              <el-button type="text" size="small" style="color:#F56C6C;" @click="preview(scope.row)">预览</el-button>
+              <el-button type="text" size="small" style="color:#F56C6C;" @click="preview(scope.row, true)">全屏预览</el-button>
               <el-button type="text" size="small" @click="copyOne(scope.row)">复制</el-button>
               <el-button type="text" size="small" @click="deleteOne(scope.row)">删除</el-button>
             </template>
@@ -90,22 +91,26 @@
         <preview />
       </div>
     </div>
+     <fullscreen-preview :fullscreen="fullscreen" @close="fullscreen = false" />
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
 import Preview from '@/components/preview'
+import FullscreenPreview from '@/components/fullscreen-preview'
 import { getOrderList, deleteOrder, copyOrder } from '@/api/manage'
 import { formatOrderDetail } from '@/utils'
 
 export default {
   components: {
-    Preview
+    Preview,
+    FullscreenPreview
   },
 
   data() {
     return {
+      fullscreen: false,
       form: {
         client: '',
         startTime: '',
@@ -186,13 +191,16 @@ export default {
     handleSelectionChange(val) {
       this.selectOrder = val
     },
-    preview(data) {
+    preview(data, showFullPreview) {
       this.updatePreviewData(data.detail)
       this.updateJobId(data.id)
       this.updateJobName(data.jobName)
       this.updateTempId(data.tempId)
       this.updateSavePath(data.savePath)
       this.updateTaskId(data.taskId)
+      if (showFullPreview === true) {
+        this.fullscreen = true
+      }
     },
     deleteOrder(message, data) {
       this.$confirm(message, '提示', {
@@ -247,22 +255,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.el-form-item {
+<style lang="scss" scoped>
+/deep/ .el-table__row:hover {
+  cursor: pointer;
+}
+/deep/ .el-form-item {
   margin-bottom: 15px;
 }
-.el-form-item__label,
-.el-form-item__content,
-.el-input__icon {
+/deep/ .el-form-item__label,
+/deep/ .el-form-item__content,
+/deep/ .el-input__icon {
   line-height: 36px;
 }
-.el-input__inner {
+/deep/ .el-input__inner {
   height: 36px;
 }
-.el-input__suffix {
+/deep/ .el-input__suffix {
   right: 0;
 }
-.el-table {
+/deep/ .el-table {
   th {
     padding: 6px;
     font-weight: 500;
@@ -273,12 +284,13 @@ export default {
 }
 .order {
   padding: 20px 10px 20px 10px;
-  flex: 1;
+  // flex: 1;
+  width: 55%;
   background: #fff;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, .1);
   &-handle {
     width: 100%;
-    .el-form-item__content {
+    /deep/ .el-form-item__content {
       display: block;
     }
     &-add {
@@ -301,31 +313,16 @@ export default {
     margin-left: 10px;
   }
   &-preview {
-    width: 500px;
-    display: flex;
-    justify-content: center;
-    // &-wrap {
-    //   width: 364px;
-    //   height: 570px;
-    // }
-    padding-top: 42px;
+    position: fixed;
+    top: 90px;
+    left: 55%;
+    right: 20px;
+    width: 45%;
+    height: calc(100% - 90px);
+    overflow: auto;
+    padding: 40px;
     &-wrap {
-      // 根据设计稿扩大了1.5倍大小再缩放
-      // width: 546px;
-      // height: 833px;
-      width: 728px;
-      height: 1088px;
-      transform-origin: top center;
-      // transform: scale(0.75);
-      transform: scale(.5);
-      .preview-btn {
-        margin-top: 60px;
-        transform: scale(2)
-        // transform: scale(1.5)
-      }
-    }
-    .print {
-      transform: none;
+      height: calc((45vw - 80px) * 1.5);
     }
   }
   label {
@@ -338,12 +335,6 @@ export default {
   &-pagination {
     margin-top: 10px;
     float: right;
-  }
-  &-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 0;
   }
 }
 </style>
