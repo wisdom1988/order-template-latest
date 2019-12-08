@@ -301,7 +301,6 @@ export default {
   }
   &-wrap {
     display: flex;
-    min-width: 1180px;
     min-height: 100%;
     overflow: auto;
   }
