@@ -41,6 +41,7 @@
 <script>
 import { mapState } from 'vuex'
 import { mergeFile, deleteFile, startOrder } from '@/api/manage'
+import { getUserId } from '@/utils/auth'
 
 export default {
   data() {
@@ -54,7 +55,9 @@ export default {
   computed: {
     ...mapState({
       savePath: ({ template }) => template.savePath,
-      taskId: ({ template }) => template.taskId
+      taskId: ({ template }) => template.taskId,
+      jobId: ({ template }) => template.jobId,
+      jobName: ({ template }) => template.jobName
     }),
     options() {
       return {
@@ -108,7 +111,12 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      startOrder(this.taskId).then(() => {
+      const params = {
+        userId: +getUserId(),
+        id: this.jobId,
+        jobName: this.jobName
+      }
+      startOrder(params).then(() => {
         this.$message.success('工单启动成功')
         loading.close()
         setTimeout(() => {

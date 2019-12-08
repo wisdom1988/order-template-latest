@@ -161,10 +161,10 @@ export function deleteOrder(data) {
 }
 
 // 启动工单
-export function startOrder(jobId) {
+export function startOrder(data) {
   return request({
     url: '/job/start',
     method: 'post',
-    data: { jobId }
+    data
   })
 }
