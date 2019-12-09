@@ -33,7 +33,12 @@
         <el-form-item class="order-handle">
           <el-button type="primary" size="small" icon="el-icon-search" class="order-search" @click="onSubmit">搜索</el-button>
           <el-button type="text" size="small" @click="resetSearch">清空筛选条件</el-button>
-          <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/list/add')">新建工单</el-button>
+          <div class="order-handle-btns">
+            <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/list/add')">新建工单</el-button>
+            <el-button type="primary" size="small" plain @click="$refs.preview.upload()">文件</el-button>
+            <el-button type="primary" size="small" plain @click="$refs.preview.editOrder()">编辑</el-button>
+            <el-button type="primary" size="small" plain @click="$refs.preview.print()">打印</el-button>
+          </div>
         </el-form-item>
       </el-form>
       <div class="order-table">
@@ -86,9 +91,9 @@
         />
       </div>
     </div>
-    <div class="order-preview">
+    <div class="order-preview" :class="{print: isPrint}">
       <div class="order-preview-wrap" :class="{print: isPrint}">
-        <preview />
+        <preview ref="preview" :show-btns="false" />
       </div>
     </div>
      <fullscreen-preview :fullscreen="fullscreen" @close="fullscreen = false" />
@@ -293,7 +298,7 @@ export default {
     /deep/ .el-form-item__content {
       display: block;
     }
-    &-add {
+    &-btns {
       margin-top: 2px;
       margin-right: 10px;
       float: right;
@@ -322,6 +327,9 @@ export default {
     padding: 40px;
     &-wrap {
       height: calc((45vw - 80px) * 1.5);
+    }
+    &.print {
+      position: static;
     }
   }
   label {

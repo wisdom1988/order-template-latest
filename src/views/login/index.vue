@@ -1,82 +1,85 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+  <div class="login">
+    <div class="login-bg" />
+    <div class="login-container">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
-      <div class="title-container">
-        <img src="./logo.png" alt="logo">
-        <h3 class="title">自动化系统</h3>
-      </div>
-
-      <div class="form-container">
-        <h5 v-show="status === 1">登陆</h5>
-        <h5 v-show="status === 2">找回密码</h5>
-        <el-form-item v-show="status === 1 || status === 2" prop="name">
-          <!-- <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span> -->
-          <el-input
-            ref="username"
-            v-model="loginForm.name"
-            placeholder="用户名称"
-            name="name"
-            type="text"
-            tabindex="1"
-          />
-        </el-form-item>
-
-        <el-form-item v-show="status === 1" prop="password">
-          <!-- <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span> -->
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="密码"
-            name="password"
-            tabindex="2"
-            @keyup.enter.native="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
-        </el-form-item>
-
-        <el-form-item v-show="status === 2" prop="email">
-          <!-- <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span> -->
-          <el-input
-            ref="usermail"
-            v-model="loginForm.email"
-            placeholder="注册邮箱"
-            name="usermail"
-            type="text"
-            tabindex="1"
-          />
-        </el-form-item>
-
-        <div v-if="status === 3" class="mail-wrap">
-          <img src="./email.png">
-          <div class="mail">邮件发送成功</div>
+        <div class="title-container">
+          <img src="./logo.png" alt="logo">
+          <h3 class="title">自动化系统</h3>
         </div>
 
-        <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleBtn">
-          {{ btnText }}
-        </el-button>
+        <div class="form-container">
+          <!-- <h5 v-show="status === 1">登陆</h5>
+          <h5 v-show="status === 2">找回密码</h5> -->
+          <el-form-item v-show="status === 1 || status === 2" prop="name">
+            <!-- <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span> -->
+            <el-input
+              ref="username"
+              v-model="loginForm.name"
+              placeholder="用户名称"
+              name="name"
+              type="text"
+              tabindex="1"
+            />
+          </el-form-item>
 
-        <div v-if="status === 1 || status === 2" class="toggleStatus" @click="toggleStatus">
-          {{ status === 1 ? '忘记密码' : '返回登陆' }}
+          <el-form-item v-show="status === 1" prop="password">
+            <!-- <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span> -->
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="密码"
+              name="password"
+              tabindex="2"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+
+          <el-form-item v-show="status === 2" prop="email">
+            <!-- <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span> -->
+            <el-input
+              ref="usermail"
+              v-model="loginForm.email"
+              placeholder="注册邮箱"
+              name="usermail"
+              type="text"
+              tabindex="1"
+            />
+          </el-form-item>
+
+          <div v-if="status === 3" class="mail-wrap">
+            <img src="./email.png">
+            <div class="mail">邮件发送成功</div>
+          </div>
+
+          <el-button :loading="loading" type="primary" style="width:100%; margin-bottom:30px;" @click.native.prevent="handleBtn">
+            {{ btnText }}
+          </el-button>
+
+          <div v-if="status === 1 || status === 2" class="toggleStatus" @click="toggleStatus">
+            {{ status === 1 ? '忘记密码' : '返回登陆' }}
+          </div>
+
+          <!-- <div class="tips">
+            <span style="margin-right:20px;">username: admin</span>
+            <span> password: any</span>
+          </div> -->
         </div>
-
-        <!-- <div class="tips">
-          <span style="margin-right:20px;">username: admin</span>
-          <span> password: any</span>
-        </div> -->
-      </div>
-    </el-form>
-    <code-verify v-if="showCodeVerify" @confirm="verifyLogin" />
+      </el-form>
+      <code-verify v-if="showCodeVerify" @confirm="verifyLogin" />
+    </div>
   </div>
 </template>
 
@@ -263,8 +266,9 @@ $light_gray:#fff;
 /* reset element-ui css */
 .login-container {
   height: 100vh;
-  background: #000 url('./bg.png') center center no-repeat;
-  background-size: contain;
+  // background: rgb(242, 242, 242) url('./bg.jpg') center bottom no-repeat;
+  // background-size: contain;
+  // background-attachment: scroll;
   .el-input {
     display: inline-block;
     height: 47px;
@@ -311,17 +315,38 @@ $light_gray:#fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#000;
+$bg:rgb(242, 242, 242);
 $dark_gray:#889aa4;
-$light_gray:#3a78ea;
+// $light_gray:#3a78ea;
+$light_gray:#2d8acd;
 
 .el-button--primary {
   background: #3A78EA;
 }
 
+.login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.login-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgb(242, 242, 242) url('./bg.jpg') center bottom no-repeat;
+  background-size: 100% auto;
+  background-attachment: scroll;
+}
+
 .login-container {
-  min-height: 100vh;
-  min-width: 1088px;
+  min-height: 550px;
+  // min-width: 1088px;
+  min-width: 900px;
   background-color: $bg;
   display: flex;
   flex-direction: column;
@@ -366,7 +391,7 @@ $light_gray:#3a78ea;
     .title {
       font-size: 28px;
       line-height: 34px;
-      color: #fff;
+      color: #2d8acd;
       margin: 0px auto 24px auto;
       text-align: center;
       font-weight: bold;
@@ -375,10 +400,8 @@ $light_gray:#3a78ea;
 
   .form-container {
     width: 390px;
-    padding: 38px 30px 60px;
-    box-shadow: 4px 4px 20px 0 rgba(0, 0, 0, .1);
+    padding: 10px 30px 60px;
     border-radius: 5px;
-    background: #fff;
     h5 {
       padding: 0;
       margin: 0;
@@ -403,6 +426,7 @@ $light_gray:#3a78ea;
     .toggleStatus {
       color: $light_gray;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
     }
   }
