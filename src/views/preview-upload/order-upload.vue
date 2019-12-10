@@ -43,9 +43,12 @@ import { mapState } from 'vuex'
 import { mergeFile, deleteFile, startOrder } from '@/api/manage'
 import { getUserId } from '@/utils/auth'
 
+const file_api_root = process.env.VUE_APP_FILE_ROOT
+
 export default {
   data() {
     return {
+      file_api_root,
       showProgress: false,
       uploaderProgress: 0,
       uploader: null
@@ -62,7 +65,7 @@ export default {
     options() {
       return {
         target:
-        'http://139.226.75.188:8622/v1/upload',
+        `${this.file_api_root}/v1/upload`,
         method: 'multipart',
         testMethod: 'post',
         testChunks: false,
