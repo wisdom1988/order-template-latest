@@ -43,7 +43,7 @@ import { mapState } from 'vuex'
 import { mergeFile, deleteFile, startOrder } from '@/api/manage'
 import { getUserId } from '@/utils/auth'
 
-const file_api_root = process.env.VUE_APP_FILE_ROOT
+const file_api_root = process.env.VUE_APP_FILE_ROOT || process.env.VUE_APP_FILE_API
 
 export default {
   data() {
