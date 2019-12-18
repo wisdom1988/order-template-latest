@@ -7,6 +7,7 @@
         :options="options"
         @upload-start="showProgress = true"
         @complete="showProgress = false"
+        @files-added="test"
         @file-progress="setProgress"
         @file-removed="handleRemove"
         @file-success="handleSuccess"
@@ -81,6 +82,11 @@ export default {
   },
 
   methods: {
+    test(files, filelist) {
+      // console.log(filelist)
+      // files.ignored = true
+      // return false
+    },
     setProgress(rootFile, file, chunk) {
       this.uploaderProgress = this.uploader.progress() * 100
     },

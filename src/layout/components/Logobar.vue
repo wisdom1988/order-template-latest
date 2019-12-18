@@ -7,15 +7,17 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <el-dropdown-item class="is-disabled user">
-            {{ name }}
-          </el-dropdown-item>
+          <div @click="jumpDetail">
+            <el-dropdown-item class="user">
+              <span>{{ name }}</span>
+            </el-dropdown-item>
+          </div>
           <router-link to="/order/list">
             <el-dropdown-item>
               工单列表
             </el-dropdown-item>
           </router-link>
-          <router-link v-if="userType" to="/admin">
+          <router-link v-if="userType === 1" to="/admin">
             <el-dropdown-item>
               控制面板
             </el-dropdown-item>
@@ -36,18 +38,25 @@ import { removeToken, removeUserId } from '@/utils/auth'
 export default {
   computed: {
     ...mapGetters([
-      'name', 'userType'
+      'name', 'userType', 'userInfo'
     ])
   },
   methods: {
     ...mapMutations({
-      setUserName: 'user/SET_NAME'
+      setUserName: 'user/SET_NAME',
+      updateStatus: 'admin/UPDATE_STATUS',
+      updateUserInfo: 'admin/UPDATE_USERINFO'
     }),
     logout() {
       removeToken()
       removeUserId()
       this.setUserName('')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    jumpDetail() {
+      this.updateStatus(4)
+      this.updateUserInfo(this.userInfo)
+      this.$router.push('/user/info')
     }
   }
 }

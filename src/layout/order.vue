@@ -12,7 +12,7 @@
 import { Navbar, AppMain, Logobar } from './components'
 
 export default {
-  name: 'Layout',
+  name: 'OrderLayout',
   components: {
     Navbar,
     AppMain,

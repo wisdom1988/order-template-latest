@@ -6,6 +6,7 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import OrderLayout from '@/layout/order'
+import UserLayout from '@/layout/user'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -96,6 +97,28 @@ export const constantRoutes = [
           }
         }
       ]
+    }]
+  },
+
+  {
+    path: '/user',
+    redirect: '/user/info',
+    name: 'User',
+    component: UserLayout,
+    hidden: true,
+    beforeEnter: (to, from, next) => {
+      if (from.path === '/') {
+        return next('/order')
+      }
+      next()
+    },
+    meta: {
+      title: '用户'
+    },
+    children: [{
+      path: 'info',
+      name: 'UserInfo',
+      component: () => import('@/views/admin/user-edit')
     }]
   },
 

@@ -6,7 +6,8 @@ const state = {
   token: getToken(),
   name: '',
   userId: getUserId(),
-  userType: 0
+  userType: 0,
+  userInfo: {}
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
   },
   SET_USERTYPE: (state, userType) => {
     state.userType = userType
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -50,9 +54,14 @@ const actions = {
         }
 
         const { name, type } = data
-
+        if (data.type === 2) {
+          data.parent = data.parent && data.parent.name
+        } else {
+          data.child = data.child && String(Object.values(data.child))
+        }
         commit('SET_NAME', name)
         commit('SET_USERTYPE', type)
+        commit('SET_USERINFO', data)
         resolve(data)
       }).catch(error => {
         reject(error)

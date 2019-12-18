@@ -25,7 +25,7 @@
       >
         <template slot-scope="scope">
           <div>
-            {{ scope.row.type ? '管理员' : '普通用户' }}
+            {{ scope.row.type | formatRole }}
           </div>
         </template>
       </el-table-column>
@@ -74,6 +74,14 @@ export default {
       total: null,
       currentPage: 1,
       pageSize: 20
+    }
+  },
+
+  filters: {
+    formatRole(type) {
+      if (!type) return '普通用户'
+      if (type === 1) return '管理员'
+      if (type === 2) return '子账户'
     }
   },
 

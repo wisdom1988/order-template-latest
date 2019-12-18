@@ -36,7 +36,7 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = store.getters.name
       const userType = store.getters.userType
       if (hasGetUserInfo) {
-        if (!userType && verifyPermission(to.path)) {
+        if (userType !== 1 && verifyPermission(to.path)) {
           next('/order')
           NProgress.done()
         } else {
@@ -46,7 +46,7 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           await store.dispatch('user/getInfo')
-          if (!store.getters.userType && verifyPermission(to.path)) {
+          if (store.getters.userType !== 1 && verifyPermission(to.path)) {
             next('/order')
             NProgress.done()
           } else {

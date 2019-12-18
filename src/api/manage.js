@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { getUserId } from '@/utils/auth'
 
 // 上传图片
 export function uploadImg(file) {
@@ -70,7 +71,9 @@ export function getTemplateList(data) {
   return request({
     url: '/orderTemplate/list',
     method: 'post',
-    data
+    data: Object.assign(data, {
+      userId: getUserId()
+    })
   })
 }
 
@@ -164,6 +167,14 @@ export function deleteOrder(data) {
 export function startOrder(data) {
   return request({
     url: '/job/start',
+    method: 'post',
+    data
+  })
+}
+
+export function getAccountList(data) {
+  return request({
+    url: '/user/mainUserList',
     method: 'post',
     data
   })
