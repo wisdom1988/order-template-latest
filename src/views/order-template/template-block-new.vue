@@ -64,6 +64,7 @@
               >
                 <el-option label="文本框" :value="1" />
                 <el-option label="下拉框" :value="2" />
+                <el-option label="日期框" :value="3"/>
               </el-select>
             </el-form-item>
           </template>
@@ -157,6 +158,21 @@
       </div>
       <el-input v-model.trim="textData" placeholder="请输入内容" class="dialog-text" />
     </el-dialog>
+    <el-dialog :visible.sync="dateTableVisible">
+      <div class="dialog-head">
+        <strong>字段名</strong>
+        <el-button type="primary" size="mini" @click="saveDateData">保存</el-button>
+        <el-button type="primary" size="mini" @click="dateTableVisible = false">取消</el-button>
+      </div>
+      <el-date-picker
+        v-model="dateData"
+        type="datetime"
+        format="yyyy年MM月dd日 HH:mm:ss"
+        value-format="yyyy-MM-dd hh:mm:ss"
+        placeholder="请选择日期时间"
+        class="dialog-text">
+      </el-date-picker>
+    </el-dialog>
   </div>
 </template>
 
@@ -176,6 +192,7 @@ export default {
     return {
       pulldownTableVisible: false,
       textTableVisible: false,
+      dateTableVisible: false,
       // cell: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       paramTemp: {
         name: '',
@@ -194,6 +211,7 @@ export default {
         selection: [{ text: '', isDefault: false }]
       },
       textData: '',
+      dateData: '',
       model: {
         tableData: this.blockData
       },
@@ -238,7 +256,7 @@ export default {
       })
     },
     initOption(item) {
-      if (item.showType === 1) {
+      if (item.showType === 1 || item.showType === 3) {
         item.option = ''
       } else {
         item.option = []
@@ -268,10 +286,13 @@ export default {
       if (showType === 1) {
         this.textData = option || ''
         this.textTableVisible = true
-      } else {
+      } else if (showType === 2) {
         this.pulldown.selection = option || [{ text: '', isDefault: false }]
         // item.option = this.pulldownData
         this.pulldownTableVisible = true
+      } else {
+        this.dateData = option || ''
+        this.dateTableVisible = true
       }
       this.editingBlockIndex = $index
     },
@@ -300,12 +321,17 @@ export default {
       this.$message.success('保存成功')
       this.textTableVisible = false
     },
+    saveDateData() {
+      this.blockData[this.editingBlockIndex].option = this.dateData
+      this.$message.success('保存成功')
+      this.dateTableVisible = false
+    },
     saveBlockData() {
       let res
       this.$refs.form.validate((valid) => {
         if (valid) {
           res = this.blockData.every((item) => {
-            if (item.showType === 1) return true
+            if (item.showType !== 2) return true
             if (!item.option || !item.option.length) {
               this.$message.error(`请点击选项按钮完善${item.name}字段下拉框数据`)
               return false

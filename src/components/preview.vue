@@ -1,5 +1,11 @@
 <template>
   <div class="preview-wrap" :class="{print: isPrint}" >
+    <div v-if="showBtns" class="preview-btn">
+      <el-button v-if="$route.path === '/order/list/main'" type="primary" size="small" plain @click="upload">文件</el-button>
+      <el-button v-if="$route.path === '/order/list/upload'" type="primary" size="small" plain @click="$router.push('/order/list/main')">返回</el-button>
+      <el-button type="primary" size="small" plain @click="editOrder">编辑</el-button>
+      <el-button type="primary" size="small" plain @click="print">打印</el-button>
+    </div>
     <div class="preview" @click="$emit('click')">
       <h5 class="preview-title">生产施工单</h5>
       <div
@@ -26,12 +32,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="showBtns" class="preview-btn">
-      <el-button v-if="$route.path === '/order/list/main'" type="primary" size="small" plain @click="upload">文件</el-button>
-      <el-button v-if="$route.path === '/order/list/upload'" type="primary" size="small" plain @click="$router.push('/order/list/main')">返回</el-button>
-      <el-button type="primary" size="small" plain @click="editOrder">编辑</el-button>
-      <el-button type="primary" size="small" plain @click="print">打印</el-button>
     </div>
   </div>
 </template>
@@ -180,7 +180,7 @@ h5 {
   }
 
 	&-btn {
-		margin-top: 30px;
+    margin-bottom: 40px;
 		text-align: center;
 	}
 }

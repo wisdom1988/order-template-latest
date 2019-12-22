@@ -110,6 +110,7 @@ export default {
       mergeFile({
         identifier,
         suffix,
+        fileName: name,
         savePath: this.savePath
       })
     },

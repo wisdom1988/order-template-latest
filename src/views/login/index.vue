@@ -13,9 +13,9 @@
           <!-- <h5 v-show="status === 1">登陆</h5>
           <h5 v-show="status === 2">找回密码</h5> -->
           <el-form-item v-show="status === 1 || status === 2" prop="name">
-            <!-- <span class="svg-container">
+            <span class="svg-container">
               <svg-icon icon-class="user" />
-            </span> -->
+            </span>
             <el-input
               ref="username"
               v-model="loginForm.name"
@@ -27,9 +27,9 @@
           </el-form-item>
 
           <el-form-item v-show="status === 1" prop="password">
-            <!-- <span class="svg-container">
+            <span class="svg-container">
               <svg-icon icon-class="password" />
-            </span> -->
+            </span>
             <el-input
               :key="passwordType"
               ref="password"
@@ -45,9 +45,9 @@
             </span>
           </el-form-item>
 
-          <el-form-item v-show="status === 2" prop="email">
+          <el-form-item v-show="status === 2" prop="email" class="email">
             <!-- <span class="svg-container">
-              <svg-icon icon-class="user" />
+              <svg-icon icon-class="message" />
             </span> -->
             <el-input
               ref="usermail"
@@ -56,6 +56,7 @@
               name="usermail"
               type="text"
               tabindex="1"
+              prefix-icon="el-icon-message"
             />
           </el-form-item>
 
@@ -79,6 +80,7 @@
         </div>
       </el-form>
       <code-verify v-if="showCodeVerify" @confirm="verifyLogin" />
+      <div class="remark">自动化系统</div>
     </div>
   </div>
 </template>
@@ -269,17 +271,29 @@ $light_gray:#fff;
   // background: rgb(242, 242, 242) url('./bg.jpg') center bottom no-repeat;
   // background-size: contain;
   // background-attachment: scroll;
+  .email {
+    .el-input {
+      padding-left: 40px;
+      input {
+        padding: 0;
+      }
+      .el-input__prefix {
+        left: 10px;
+      }
+    }
+  }
   .el-input {
     display: inline-block;
     height: 47px;
     width: 85%;
+    vertical-align: middle;
 
     input {
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding: 12px 5px 12px 15px;
+      padding: 12px 5px 12px 5px;
       // color: $light_gray;
       height: 47px;
       // caret-color: $cursor;
@@ -311,6 +325,13 @@ $light_gray:#fff;
       vertical-align: middle;
     }
   }
+  .remark {
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    text-align: center;
+    color: #ccc;
+  }
 }
 </style>
 
@@ -339,15 +360,15 @@ $light_gray:#2d8acd;
   right: 0;
   bottom: 0;
   background: rgb(242, 242, 242) url('./bg.jpg') center bottom no-repeat;
-  background-size: 100% auto;
+  background-size: 1100px auto;
   background-attachment: scroll;
 }
 
 .login-container {
+  position: relative;
   min-height: 550px;
   // min-width: 1088px;
   min-width: 900px;
-  background-color: $bg;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -357,6 +378,7 @@ $light_gray:#2d8acd;
     position: relative;
     width: 390px;
     // margin: 0 auto;
+    margin-top: -80px;
   }
 
   .tips {
@@ -373,7 +395,8 @@ $light_gray:#2d8acd;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    // color: $dark_gray;
+    color: #d6d8de;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -392,7 +415,7 @@ $light_gray:#2d8acd;
       font-size: 28px;
       line-height: 34px;
       color: #2d8acd;
-      margin: 0px auto 24px auto;
+      margin: 0px auto 15px auto;
       text-align: center;
       font-weight: bold;
     }
@@ -410,7 +433,7 @@ $light_gray:#2d8acd;
       color: #737373;
     }
     .el-form-item {
-      margin-bottom: 26px;
+      margin-bottom: 20px;
     }
     .el-input {
       input {

@@ -21,10 +21,11 @@
               :class="`flex-${content.length}`"
             >
               <div v-if="index % 2 === 0" class="option-name">
+                <span v-if="key === '1' && (content.name === '客户' || content.name === '工单号')" style="color: red">*</span>
                 <span>{{ content.name }}</span>
               </div>
               <el-input v-else-if="content.showType === 1" v-model.trim="content.value" placeholder="请输入内容" />
-              <el-select v-else v-model="content.value" placeholder="请选择">
+              <el-select v-else-if="content.showType === 2" v-model="content.value" placeholder="请选择">
                 <el-option
                   v-for="option in content.option"
                   :key="option.text"
@@ -32,12 +33,21 @@
                   :value="option.text"
                 />
               </el-select>
+              <el-date-picker
+                v-else
+                v-model="content.value"
+                type="datetime"
+                format="yyyy年MM月dd日 HH:mm:ss"
+                value-format="yyyy-MM-dd hh:mm:ss"
+                placeholder="请选择日期时间">
+              </el-date-picker>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="detail-btn">
+      <el-button plain @click="$router.push('/order/list')">返回</el-button>
       <el-button type="primary" plain @click="resetData">重置</el-button>
       <el-button type="primary" @click="submitOrder">提交</el-button>
     </div>
@@ -221,6 +231,9 @@ export default {
   flex: 10;
 }
 .detail {
+  .el-input__icon {
+    line-height: 20px;
+  }
   &-intro {
     margin-bottom: 15px;
     font-size: 16px;

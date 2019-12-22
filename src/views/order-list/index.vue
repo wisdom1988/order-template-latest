@@ -2,13 +2,13 @@
   <div class="order-wrap">
     <div class="order">
       <el-form ref="form" :model="form" inline label-width="80px">
-        <el-form-item label="客户名">
+        <el-form-item label="客户名称">
           <el-input v-model="form.client" />
         </el-form-item>
-        <el-form-item label="工单号">
+        <el-form-item label="工单编号">
           <el-input v-model="form.jobName" />
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序方式">
           <el-select v-model="form.sort" placeholder="请选择排序条件">
             <el-option label="创建时间" :value="1" />
             <el-option label="工单名" :value="2" />
@@ -35,7 +35,7 @@
           <el-button type="text" size="small" @click="resetSearch">清空筛选条件</el-button>
           <div class="order-handle-btns">
             <el-button class="order-handle-add" type="primary" size="small" icon="el-icon-plus" @click="$router.push('/order/list/add')">新建工单</el-button>
-            <el-button type="primary" size="small" plain @click="$refs.preview.upload()">文件</el-button>
+            <el-button type="primary" size="small" plain @click="$refs.preview.upload()">上传</el-button>
             <el-button type="primary" size="small" plain @click="$refs.preview.editOrder()">编辑</el-button>
             <el-button type="primary" size="small" plain @click="$refs.preview.print()">打印</el-button>
           </div>
@@ -54,7 +54,7 @@
             width="60px"
           />
           <el-table-column
-            label="工单号"
+            label="工单编号"
           >
             <template slot-scope="scope">{{ scope.row.jobName }}</template>
           </el-table-column>
@@ -66,7 +66,6 @@
             prop="createTime"
             label="创建时间"
             show-overflow-tooltip
-            min-width="140px"
           />
           <el-table-column
             label="操作"

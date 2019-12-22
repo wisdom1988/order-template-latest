@@ -144,7 +144,7 @@ export function deepCopy(obj) {
 }
 
 export function getDefaultValue(item) {
-  if (item.showType === 1) {
+  if (item.showType !== 2) {
     return item.option
   }
   let value

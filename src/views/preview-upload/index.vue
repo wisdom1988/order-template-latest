@@ -68,7 +68,6 @@ export default {
       // transform: scale(0.75);
       transform: scale(.5);
       .preview-btn {
-        margin-top: 60px;
         transform: scale(2)
         // transform: scale(1.5)
       }
