@@ -50,14 +50,21 @@ export default {
 <style lang="scss">
 .attach {
   display: flex;
-  flex: 1;
-  height: 100%;
+  min-width: 1200px;
+  height: calc(100vh - 90px);
+  overflow: hidden;
   background: #F8FAFE;
   &-preview {
     flex: 1;
     display: flex;
     justify-content: center;
     padding-top: 42px;
+    padding-bottom: 20px;
+    height: 100%;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
     &-wrap {
       // 根据设计稿扩大了1.5倍大小再缩放
       // width: 546px;
@@ -66,11 +73,11 @@ export default {
       height: 1088px;
       transform-origin: top center;
       // transform: scale(0.75);
-      transform: scale(.5);
-      .preview-btn {
-        transform: scale(2)
-        // transform: scale(1.5)
-      }
+      // transform: scale(.5);
+      // .preview-btn {
+      //   transform: scale(2)
+      //   // transform: scale(1.5)
+      // }
     }
     .print {
       transform: none
@@ -79,7 +86,6 @@ export default {
   &-upload {
     width: 370px;
     min-width: 370px;
-    height: 100%;
     background: #fff;
   }
 }

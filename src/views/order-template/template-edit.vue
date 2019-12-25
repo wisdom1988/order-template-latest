@@ -62,7 +62,7 @@ export default {
         if (val.tempId) {
           const params = deepCopy(val.params)
           params.forEach((item) => {
-            if (item.type === 1 && (item.name === '客户' || item.name === '工单号')) {
+            if (item.type === 1 && (item.name === '客户名称' || item.name === '工单编号')) {
               item.isRequired = true
             }
           })
@@ -79,7 +79,7 @@ export default {
           params: []
         }
         this.orderData.push({
-          name: '客户',
+          name: '客户名称',
           nameLength: null,
           contentLength: null,
           showType: null,
@@ -89,7 +89,7 @@ export default {
           type: 1
         })
         this.orderData.push({
-          name: '工单号',
+          name: '工单编号',
           nameLength: null,
           contentLength: null,
           showType: null,

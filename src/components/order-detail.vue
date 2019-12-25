@@ -21,7 +21,7 @@
               :class="`flex-${content.length}`"
             >
               <div v-if="index % 2 === 0" class="option-name">
-                <span v-if="key === '1' && (content.name === '客户' || content.name === '工单号')" style="color: red">*</span>
+                <span v-if="key === '1' && (content.name === '客户名称' || content.name === '工单编号')" style="color: red">*</span>
                 <span>{{ content.name }}</span>
               </div>
               <el-input v-else-if="content.showType === 1" v-model.trim="content.value" placeholder="请输入内容" />
@@ -117,20 +117,20 @@ export default {
       let client
       const valid = orderDetail.every((item) => {
         if (item.type !== 1) return true
-        if (item.name === '客户') {
+        if (item.name === '客户名称') {
           if (item.value) {
             client = item.value
             return true
           } else {
-            return void this.$message.error("请填写工单参数的'客户'项")
+            return void this.$message.error("请填写工单参数的'客户名称'项")
           }
         }
-        if (item.name === '工单号') {
+        if (item.name === '工单编号') {
           if (item.value) {
             jobName = item.value
             return true
           } else {
-            return void this.$message.error("请填写工单参数的'工单号'项")
+            return void this.$message.error("请填写工单参数的'工单编号'项")
           }
         }
         return true

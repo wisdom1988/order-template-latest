@@ -4,7 +4,9 @@
       <el-table ref="table" :data="model.tableData">
         <el-table-column label="字段名">
           <template slot-scope="scope">
-            <span v-if="scope.row.isRequired" class="block-custom">{{ scope.row.name }}</span>
+            <span v-if="scope.row.isRequired" class="block-custom">
+              <i style="color: red;">*</i> {{ scope.row.name }}
+            </span>
             <el-form-item
               v-else
               :prop="'tableData.' + scope.$index + '.name'"

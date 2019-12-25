@@ -11,8 +11,8 @@
         <el-form-item label="排序方式">
           <el-select v-model="form.sort" placeholder="请选择排序条件">
             <el-option label="创建时间" :value="1" />
-            <el-option label="工单名" :value="2" />
-            <el-option label="客户名" :value="3" />
+            <el-option label="工单编号" :value="2" />
+            <el-option label="客户名称" :value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="工单日期">
@@ -60,7 +60,7 @@
           </el-table-column>
           <el-table-column
             prop="client"
-            label="客户名"
+            label="客户名称"
           />
           <el-table-column
             prop="createTime"
@@ -249,7 +249,7 @@ export default {
         center: true
       }).then(() => {
         copyOrder(data.id).then(() => {
-          this.$message.success(`复制成功,工单号为：${data.jobName}复制`)
+          this.$message.success(`复制成功,工单编号为：${data.jobName}复制`)
           this.currentPage = 1
           this.getOrderList()
         })
