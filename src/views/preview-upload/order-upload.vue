@@ -115,25 +115,30 @@ export default {
       })
     },
     startOrder() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+      this.$message.success('工单启动成功')
+      // loading.close()
+      setTimeout(() => {
+        this.$router.push('/order/list')
+      }, 2000)
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
       const params = {
         userId: +getUserId(),
         id: this.jobId,
         jobName: this.jobName
       }
       startOrder(params).then(() => {
-        this.$message.success('工单启动成功')
-        loading.close()
-        setTimeout(() => {
-          this.$router.push('/order/list')
-        }, 1000)
+        // this.$message.success('工单启动成功')
+        // // loading.close()
+        // setTimeout(() => {
+        //   this.$router.push('/order/list')
+        // }, 1000)
       }, () => {
-        loading.close()
+        // loading.close()
       })
     }
   }
@@ -178,6 +183,7 @@ export default {
         border-radius: 15px;
         cursor: pointer;
         background: #ccc;
+        outline: none;
       }
     }
     &-up {
