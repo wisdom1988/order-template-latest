@@ -48,7 +48,7 @@ export default {
   display: flex;
   height: 100%;
   &-order {
-    padding: 11px 24px 0;
+    padding: 11px 24px 30px;
     flex: 1;
     height: 100%;
     overflow: auto;
