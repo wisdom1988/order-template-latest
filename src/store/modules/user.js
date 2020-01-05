@@ -1,6 +1,5 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, setUserId, getUserId } from '@/utils/auth'
-import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
@@ -63,20 +62,6 @@ const actions = {
         commit('SET_USERTYPE', type)
         commit('SET_USERINFO', data)
         resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
       }).catch(error => {
         reject(error)
       })
