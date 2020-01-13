@@ -140,17 +140,17 @@ export default {
   },
   methods: {
     validatePassword(rule, value, callback) {
-      if (value.length < 6) {
-        callback(new Error('密码不能小于6位数'))
-      } else {
+      if (value.length >= 6 || this.status === 2) {
         callback()
+      } else {
+        callback(new Error('密码不能小于6位数'))
       }
     },
     validateMail(rule, value, callback) {
-      if (!validMail(value)) {
-        callback(new Error('请输入正确的邮箱'))
-      } else {
+      if (validMail(value) || this.status === 1) {
         callback()
+      } else {
+        callback(new Error('请输入正确的邮箱'))
       }
     },
     showPwd() {
@@ -186,7 +186,6 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (!valid) return
         const { password, ...reqData } = this.loginForm
-        console.log(password)
         const loading = this.$loading({
           lock: true,
           text: 'Loading',

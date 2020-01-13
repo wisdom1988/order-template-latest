@@ -101,9 +101,7 @@ export default {
         deleteFile({ savePath: this.savePath })
       }).catch(() => {})
     },
-    handleRemove(file) {
-      console.log(file)
-    },
+    handleRemove(file) {},
     handleSuccess(rootFile, file, message, chunk) {
       const { uniqueIdentifier: identifier, name } = file
       const suffix = `.${name.split('.').slice(-1)[0]}`

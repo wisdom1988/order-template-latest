@@ -122,7 +122,6 @@ export default {
   watch: {
     userInfo: {
       handler(val) {
-        console.log(val, this.status)
         this.formData = this.status !== 2 ? deepCopy(val) : {
           name: '',
           email: '',
